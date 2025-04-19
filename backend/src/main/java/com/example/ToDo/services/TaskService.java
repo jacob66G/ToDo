@@ -1,0 +1,17 @@
+package com.example.ToDo.services;
+
+import com.example.ToDo.models.Task;
+import com.example.ToDo.models.dtos.TaskResponseDto;
+import com.example.ToDo.models.dtos.TaskDto;
+
+import java.util.List;
+
+public interface TaskService {
+    List<TaskResponseDto> getTasksDtoByUser();
+    TaskResponseDto getTaskDtoById(Long id);
+    Task getTaskById(Long id);
+    TaskResponseDto createTask(TaskDto taskDto);
+    TaskResponseDto updateTask(Long id, TaskDto taskDto);
+    TaskResponseDto updateStatus(Long taskId, Long statusId);
+    void deleteTaskById(Long id);
+}
