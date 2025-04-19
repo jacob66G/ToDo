@@ -1,0 +1,33 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: ToDo
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: ${H2_USERNAME:sa}
+    password: ${H2_PASSWORD:password}
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.xml
+  security:
+    user:
+      name: ${SECURITY_USERNAME:user}
+      password: ${SECURITY_PASSWORD:12345}
+logging:
+  level:
+    org:
+      springframework:
+        security: ${SPRING_SECURITY_LOG_LEVEL:INFO}
+  pattern:
+    console: ${CONSOLE_LOGGING_PATTERN:%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) - %msg%n}
+
+
