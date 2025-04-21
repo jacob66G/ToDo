@@ -1,8 +1,8 @@
 package com.example.ToDo.services;
 
 import com.example.ToDo.models.Category;
-import com.example.ToDo.models.dtos.CategoryDto;
-import com.example.ToDo.models.dtos.CategoryResponseDto;
+import com.example.ToDo.dto.CategoryDto;
+import com.example.ToDo.dto.CategoryResponseDto;
 
 import java.util.List;
 

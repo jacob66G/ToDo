@@ -1,4 +1,4 @@
-package com.example.ToDo.models.dtos;
+package com.example.ToDo.dto;
 
 public record TaskResponseDto(
         Long id,

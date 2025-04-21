@@ -1,4 +1,4 @@
-package com.example.ToDo.models.dtos;
+package com.example.ToDo.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

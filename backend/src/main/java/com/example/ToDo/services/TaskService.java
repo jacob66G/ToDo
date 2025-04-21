@@ -1,8 +1,8 @@
 package com.example.ToDo.services;
 
 import com.example.ToDo.models.Task;
-import com.example.ToDo.models.dtos.TaskResponseDto;
-import com.example.ToDo.models.dtos.TaskDto;
+import com.example.ToDo.dto.TaskResponseDto;
+import com.example.ToDo.dto.TaskDto;
 
 import java.util.List;
 

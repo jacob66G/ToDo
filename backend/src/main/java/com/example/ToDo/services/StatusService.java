@@ -1,8 +1,8 @@
 package com.example.ToDo.services;
 
 import com.example.ToDo.models.Status;
-import com.example.ToDo.models.dtos.StatusDto;
-import com.example.ToDo.models.dtos.StatusResponseDto;
+import com.example.ToDo.dto.StatusDto;
+import com.example.ToDo.dto.StatusResponseDto;
 
 import java.util.List;
 

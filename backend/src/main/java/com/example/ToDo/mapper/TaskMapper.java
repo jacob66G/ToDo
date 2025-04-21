@@ -1,7 +1,7 @@
 package com.example.ToDo.mapper;
 
 import com.example.ToDo.models.Task;
-import com.example.ToDo.models.dtos.TaskResponseDto;
+import com.example.ToDo.dto.TaskResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
