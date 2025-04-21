@@ -52,4 +52,14 @@ public class User {
         statuses.add(status);
         status.setUser(this);
     }
+
+    public void addTask(Task task) {
+
+        if(tasks == null) {
+            tasks = new HashSet<>();
+        }
+
+        tasks.add(task);
+        task.setUser(this);
+    }
 }
