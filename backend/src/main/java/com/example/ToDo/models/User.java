@@ -1,13 +1,10 @@
 package com.example.ToDo.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,39 +20,36 @@ public class User {
 
     private String username;
 
+    private String email;
+
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks;
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<Task> tasks;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Category> categories;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<Category> categories;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Status> statuses;
-
-    public void addTask(Task task) {
-        if (tasks == null) {
-            tasks = new ArrayList<>();
-        }
-        tasks.add(task);
-        task.setUser(this);
-    }
+    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private Set<Status> statuses;
 
     public void addCategory(Category category) {
+
         if(categories == null) {
-            categories = new ArrayList<>();
+            categories = new HashSet<>();
         }
+
         categories.add(category);
         category.setUser(this);
     }
 
     public void addStatus(Status status) {
+
         if(statuses == null) {
-            statuses = new ArrayList<>();
+            statuses = new HashSet<>();
         }
+
         statuses.add(status);
         status.setUser(this);
     }
-
 }
