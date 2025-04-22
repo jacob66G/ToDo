@@ -33,6 +33,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private Set<Status> statuses;
 
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
     public void addCategory(Category category) {
 
         if(categories == null) {

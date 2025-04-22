@@ -24,4 +24,8 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Category(String name) {
+        this.name = name;
+    }
 }

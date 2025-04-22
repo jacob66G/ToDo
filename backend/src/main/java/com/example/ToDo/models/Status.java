@@ -24,4 +24,9 @@ public class Status {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Status(String name, boolean isDefault) {
+        this.name = name;
+        this.isDefault = isDefault;
+    }
 }
