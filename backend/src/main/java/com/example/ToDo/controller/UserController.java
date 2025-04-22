@@ -27,7 +27,7 @@ public class UserController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .header(ApplicationConstants.LOCATION_HEADER, "/api/users" + savedUserResponse.getId())
+                .header(ApplicationConstants.LOCATION_HEADER, "/api/users/" + savedUserResponse.getId())
                 .body(savedUserResponse);
     }
 }

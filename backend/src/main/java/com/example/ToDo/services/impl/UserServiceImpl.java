@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.fromDto(userRegistrationDto);
 
         // hashing user password before storing in database
-        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        user.setPassword(this.passwordEncoder.encode(userRegistrationDto.getPassword()));
 
         // creating default category for user
         user.addCategory(new Category(ApplicationConstants.DEFAULT_CATEGORY));
