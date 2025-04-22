@@ -1,0 +1,12 @@
+<div id="main-div" class="border border-black w-20 mx-auto flex items-center justify-center min-h-screen">
+    @if(loginVisible)
+    {
+        <app-login></app-login>
+        <button type="button" class="mt-2 btn btn-secondary d-grid gap-2 col-6 mx-auto" (click)="loginVisibleChange()">Zarejestruj się!</button>
+    }
+    @else
+    {
+        <app-register></app-register>
+        <button type="button" class="mt-2 btn btn-secondary d-grid gap-2 col-6 mx-auto" (click)="loginVisibleChange()">Mam już konto!</button>
+    }
+</div>
