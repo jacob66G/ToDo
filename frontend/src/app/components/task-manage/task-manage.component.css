@@ -1,0 +1,9 @@
+#main-div {
+    width: 15vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+#save-button{
+    height: 10px;
+}
