@@ -1,6 +1,7 @@
 package com.example.ToDo.services.impl;
 
 import com.example.ToDo.exceptions.DuplicateNameException;
+import com.example.ToDo.exceptions.HasAssociatedTasksException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
 import com.example.ToDo.mapper.TaskMapper;
 import com.example.ToDo.models.*;
@@ -106,6 +107,20 @@ public class TaskServiceImpl implements TaskService {
     public void deleteTaskById(Long id) {
         Task task = getTaskById(id);
         taskRepository.delete(task);
+    }
+
+    @Override
+    public void checkIfCategoryHasAssociatedTasks(String username, Long categoryId) {
+        if (taskRepository.existsByUser_UsernameAndCategory_Id(username, categoryId)) {
+            throw new HasAssociatedTasksException(Category.class.getSimpleName(), categoryId);
+        }
+    }
+
+    @Override
+    public void checkIfStatusHasAssociatedTasks(String username, Long statusId) {
+        if (taskRepository.existsByUser_UsernameAndStatus_Id(username, statusId)) {
+            throw new HasAssociatedTasksException(Status.class.getSimpleName(), statusId);
+        }
     }
 
     private String getCurrentUserName() {

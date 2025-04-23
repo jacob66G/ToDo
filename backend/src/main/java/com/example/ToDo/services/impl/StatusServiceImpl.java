@@ -12,6 +12,7 @@ import com.example.ToDo.dto.StatusResponseDto;
 import com.example.ToDo.repositories.StatusRepository;
 import com.example.ToDo.repositories.TaskRepository;
 import com.example.ToDo.services.StatusService;
+import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,18 +27,18 @@ public class StatusServiceImpl implements StatusService {
     private final StatusRepository statusRepository;
     private final StatusMapper statusMapper;
     private final UserService userService;
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
 
     public StatusServiceImpl(
             StatusRepository statusRepository,
             StatusMapper statusMapper,
             UserService userService,
-            TaskRepository taskRepository
+            TaskService taskService
     ) {
         this.statusRepository = statusRepository;
         this.statusMapper = statusMapper;
         this.userService = userService;
-        this.taskRepository = taskRepository;
+        this.taskService = taskService;
     }
 
     @Override
@@ -93,7 +94,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public void deleteStatusById(Long id) {
         Status status = getStatusById(id);
-        checkForConnectionsWithTasks(getCurrentUserName(), id);
+        taskService.checkIfStatusHasAssociatedTasks(getCurrentUserName(), status.getId());
 
         statusRepository.delete(status);
     }
@@ -106,12 +107,6 @@ public class StatusServiceImpl implements StatusService {
     private void checkForDuplicateName(String username, String name) {
         if (statusRepository.existsByUser_UsernameAndName(username, name)) {
             throw new DuplicateNameException(Category.class.getSimpleName(), name);
-        }
-    }
-
-    private void checkForConnectionsWithTasks(String username, Long statusId) {
-        if(taskRepository.existsByUser_UsernameAndStatus_Id(username, statusId)) {
-            throw new HasAssociatedTasksException(Status.class.getSimpleName(), statusId);
         }
     }
 }

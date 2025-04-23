@@ -14,4 +14,6 @@ public interface TaskService {
     TaskResponseDto updateTask(Long id, TaskDto taskDto);
     TaskResponseDto updateStatus(Long taskId, Long statusId);
     void deleteTaskById(Long id);
+    void checkIfCategoryHasAssociatedTasks(String username, Long categoryId);
+    void checkIfStatusHasAssociatedTasks(String username, Long statusId);
 }

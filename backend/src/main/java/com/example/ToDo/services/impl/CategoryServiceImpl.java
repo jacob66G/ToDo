@@ -1,7 +1,6 @@
 package com.example.ToDo.services.impl;
 
 import com.example.ToDo.exceptions.DuplicateNameException;
-import com.example.ToDo.exceptions.HasAssociatedTasksException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
 import com.example.ToDo.mapper.CategoryMapper;
 import com.example.ToDo.models.Category;
@@ -9,8 +8,8 @@ import com.example.ToDo.models.User;
 import com.example.ToDo.dto.CategoryDto;
 import com.example.ToDo.dto.CategoryResponseDto;
 import com.example.ToDo.repositories.CategoryRepository;
-import com.example.ToDo.repositories.TaskRepository;
 import com.example.ToDo.services.CategoryService;
+import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
@@ -26,18 +25,18 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
     private final UserService userService;
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
 
     public CategoryServiceImpl(
             CategoryRepository categoryRepository,
             CategoryMapper categoryMapper,
             UserService userService,
-            TaskRepository taskRepository
+            TaskService taskService
     ) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
         this.userService = userService;
-        this.taskRepository = taskRepository;
+        this.taskService = taskService;
     }
 
     @Override
@@ -86,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategoryById(Long id) {
         Category category = getCategoryById(id);
-        checkForConnectionsWithTasks(getCurrentUserName(), id);
+        taskService.checkIfCategoryHasAssociatedTasks(getCurrentUserName(), category.getId());
 
         categoryRepository.delete(category);
     }
@@ -102,9 +101,4 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-    private void checkForConnectionsWithTasks(String username, Long categoryId) {
-        if(taskRepository.existsByUser_UsernameAndCategory_Id(username, categoryId)) {
-            throw new HasAssociatedTasksException(Category.class.getSimpleName(), categoryId);
-        }
-    }
 }
