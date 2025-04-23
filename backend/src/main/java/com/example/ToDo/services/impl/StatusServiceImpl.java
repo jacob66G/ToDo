@@ -1,6 +1,7 @@
 package com.example.ToDo.services.impl;
 
 import com.example.ToDo.exceptions.DuplicateNameException;
+import com.example.ToDo.exceptions.HasAssociatedTasksException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
 import com.example.ToDo.mapper.StatusMapper;
 import com.example.ToDo.models.Category;
@@ -9,6 +10,7 @@ import com.example.ToDo.models.User;
 import com.example.ToDo.dto.StatusDto;
 import com.example.ToDo.dto.StatusResponseDto;
 import com.example.ToDo.repositories.StatusRepository;
+import com.example.ToDo.repositories.TaskRepository;
 import com.example.ToDo.services.StatusService;
 import com.example.ToDo.services.UserService;
 import org.springframework.security.core.Authentication;
@@ -24,11 +26,18 @@ public class StatusServiceImpl implements StatusService {
     private final StatusRepository statusRepository;
     private final StatusMapper statusMapper;
     private final UserService userService;
+    private final TaskRepository taskRepository;
 
-    public StatusServiceImpl(StatusRepository statusRepository, StatusMapper statusMapper, UserService userService) {
+    public StatusServiceImpl(
+            StatusRepository statusRepository,
+            StatusMapper statusMapper,
+            UserService userService,
+            TaskRepository taskRepository
+    ) {
         this.statusRepository = statusRepository;
         this.statusMapper = statusMapper;
         this.userService = userService;
+        this.taskRepository = taskRepository;
     }
 
     @Override
@@ -58,7 +67,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public StatusResponseDto createStatus(StatusDto statusDto) {
         String username = getCurrentUserName();
-        checkForDuplicateName(statusDto.name(), username);
+        checkForDuplicateName(username, statusDto.name());
 
         User user = userService.getUserByUsername(username);
 
@@ -74,7 +83,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public StatusResponseDto updateStatus(Long id, StatusDto statusDto) {
         Status status = getStatusById(id);
-        checkForDuplicateName(statusDto.name(), getCurrentUserName());
+        checkForDuplicateName(getCurrentUserName(), statusDto.name());
 
         status.setName(statusDto.name());
 
@@ -84,6 +93,8 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public void deleteStatusById(Long id) {
         Status status = getStatusById(id);
+        checkForConnectionsWithTasks(getCurrentUserName(), id);
+
         statusRepository.delete(status);
     }
 
@@ -92,9 +103,15 @@ public class StatusServiceImpl implements StatusService {
         return auth.getName();
     }
 
-    private void checkForDuplicateName(String name, String username) {
-        if (statusRepository.existsByNameAndUser_Username(name, username)) {
+    private void checkForDuplicateName(String username, String name) {
+        if (statusRepository.existsByUser_UsernameAndName(username, name)) {
             throw new DuplicateNameException(Category.class.getSimpleName(), name);
+        }
+    }
+
+    private void checkForConnectionsWithTasks(String username, Long statusId) {
+        if(taskRepository.existsByUser_UsernameAndStatus_Id(username, statusId)) {
+            throw new HasAssociatedTasksException(Status.class.getSimpleName(), statusId);
         }
     }
 }

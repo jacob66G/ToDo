@@ -15,6 +15,6 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
 
     Optional<Status> findByName(String name);
 
-    @Query("SELECT COUNT(*) > 0 FROM Status s WHERE LOWER(s.name) = LOWER(:name) AND s.user.username = :username")
-    Boolean existsByNameAndUser_Username(@Param("name") String name, @Param("username") String username);
+    @Query("SELECT COUNT(*) > 0 FROM Status s WHERE s.user.username = :username AND LOWER(s.name) = LOWER(:name)")
+    boolean existsByUser_UsernameAndName(@Param("username") String username, @Param("name") String name);
 }

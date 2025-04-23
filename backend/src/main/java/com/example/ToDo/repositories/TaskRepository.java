@@ -12,8 +12,12 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findAllByUser_Username(String userName);
 
-    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE LOWER(t.title) = LOWER(:title) AND t.user.username = :username")
-    Boolean existsByTitleAndUser_Username(@Param("title") String title, @Param("username") String username);
+    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.username = :username AND LOWER(t.title) = LOWER(:title)")
+    boolean existsByUser_UsernameAndTitle(@Param("username") String username, @Param("title") String title);
 
+    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.username = :username AND t.category.id = :categoryId")
+    boolean existsByUser_UsernameAndCategory_Id(@Param("username") String username, @Param("categoryId") Long categoryId);
 
+    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.username = :username AND t.status.id = :statusId")
+    boolean existsByUser_UsernameAndStatus_Id(@Param("username") String username, @Param("categoryId") Long statusId);
 }

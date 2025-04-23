@@ -63,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDto createTask(@Valid TaskDto taskDto) {
         String username = getCurrentUserName();
-        checkForDuplicateTitle(taskDto.title(), username);
+        checkForDuplicateTitle(username, taskDto.title());
 
         User user = userService.getUserByUsername(username);
 
@@ -81,7 +81,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDto updateTask(Long id, @Valid TaskDto taskDto) {
         Task task = getTaskById(id);
-        checkForDuplicateTitle(taskDto.title(), getCurrentUserName());
+        checkForDuplicateTitle(getCurrentUserName(), taskDto.title());
 
         task.setTitle(taskDto.title());
         task.setDescription(taskDto.description());
@@ -113,8 +113,8 @@ public class TaskServiceImpl implements TaskService {
         return auth.getName();
     }
 
-    private void checkForDuplicateTitle(String title, String username) {
-        if (taskRepository.existsByTitleAndUser_Username(title, username)) {
+    private void checkForDuplicateTitle(String username, String title) {
+        if (taskRepository.existsByUser_UsernameAndTitle(username, title)) {
             throw new DuplicateNameException(Task.class.getSimpleName(), title);
         }
     }

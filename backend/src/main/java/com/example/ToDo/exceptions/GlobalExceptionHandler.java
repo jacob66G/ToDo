@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(
                 409,
                 e.getMessage(),
-                "",
+                "Set name failed for the request.",
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
@@ -48,5 +48,16 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HasAssociatedTasksException.class)
+    public ResponseEntity<ErrorResponse> handleHasAssociatedTasksException(HasAssociatedTasksException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                409,
+                e.getMessage(),
+                "Delete resource failed.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 }

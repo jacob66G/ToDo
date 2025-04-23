@@ -12,6 +12,6 @@ import java.util.List;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByUser_Username(String userName);
 
-    @Query("SELECT COUNT(*) > 0 FROM Category c WHERE LOWER(c.name) = LOWER(:name) AND c.user.username = :username")
-    Boolean existsByNameAndUser_Username(@Param("name") String name, @Param("username") String username);
+    @Query("SELECT COUNT(*) > 0 FROM Category c WHERE c.user.username = :username AND  LOWER(c.name) = LOWER(:name)")
+    boolean existsByUser_UsernameAndName(@Param("username") String username, @Param("name") String name);
 }

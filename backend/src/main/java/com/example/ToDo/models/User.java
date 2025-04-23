@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -41,7 +42,7 @@ public class User {
     public void addCategory(Category category) {
 
         if(categories == null) {
-            categories = new HashSet<>();
+            categories = new LinkedHashSet<>();
         }
 
         categories.add(category);
@@ -51,7 +52,7 @@ public class User {
     public void addStatus(Status status) {
 
         if(statuses == null) {
-            statuses = new HashSet<>();
+            statuses = new LinkedHashSet<>();
         }
 
         statuses.add(status);
@@ -61,7 +62,7 @@ public class User {
     public void addTask(Task task) {
 
         if(tasks == null) {
-            tasks = new HashSet<>();
+            tasks = new LinkedHashSet<>();
         }
 
         tasks.add(task);
