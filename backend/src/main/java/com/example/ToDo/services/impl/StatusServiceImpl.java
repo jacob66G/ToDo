@@ -1,7 +1,6 @@
 package com.example.ToDo.services.impl;
 
 import com.example.ToDo.exceptions.DuplicateNameException;
-import com.example.ToDo.exceptions.HasAssociatedTasksException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
 import com.example.ToDo.mapper.StatusMapper;
 import com.example.ToDo.models.Category;
@@ -10,7 +9,6 @@ import com.example.ToDo.models.User;
 import com.example.ToDo.dto.StatusDto;
 import com.example.ToDo.dto.StatusResponseDto;
 import com.example.ToDo.repositories.StatusRepository;
-import com.example.ToDo.repositories.TaskRepository;
 import com.example.ToDo.services.StatusService;
 import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
