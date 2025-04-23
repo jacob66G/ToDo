@@ -59,20 +59,15 @@ class CategoryServiceImplTest {
     @Test
     void getCategoriesDtoByUser_ShouldReturnListOfCategoryResponseDtos_WhenCategoriesExistForUser() {
         //given
-        User user = new User();
-        user.setUsername(testUsername);
-
         setUpSecurityContext();
 
         Category category1= new Category();
         category1.setId(1L);
         category1.setName("category 1");
-        category1.setUser(user);
 
         Category category2= new Category();
         category2.setId(2L);
         category2.setName("category 2");
-        category2.setUser(user);
 
         List<Category> categories = List.of(category1,category2);
 
@@ -98,9 +93,6 @@ class CategoryServiceImplTest {
     @Test
     void getCategoriesDtoByUser_shouldReturnEmptyList_whenNoCategoriesExistForUser() {
         //when
-        User user = new User();
-        user.setUsername(testUsername);
-
         setUpSecurityContext();
 
         //when
@@ -140,6 +132,7 @@ class CategoryServiceImplTest {
     void getCategoryDtoById_shouldThrowResourceNotFoundException_whenCategoryDoesNotExist() {
         //given
         Long categoryId = 1L;
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
         //when + then
        assertThrows(ResourceNotFoundException.class, () -> categoryService.getCategoryDtoById(categoryId));
@@ -172,6 +165,7 @@ class CategoryServiceImplTest {
     void getCategoryById_shouldThrowResourceNotFoundException_whenCategoryDoesNotExist() {
         //given
         Long categoryId = 1L;
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
         //when + then
         assertThrows(ResourceNotFoundException.class, () -> categoryService.getCategoryById(categoryId));
@@ -234,9 +228,6 @@ class CategoryServiceImplTest {
     @Test
     void updateCategory_shouldUpdateCategoryAndReturnCategoryResponseDto() {
         //given
-        User user = new User();
-        user.setUsername(testUsername);
-
         setUpSecurityContext();
 
         Long categoryId = 1L;
@@ -244,7 +235,6 @@ class CategoryServiceImplTest {
         Category category = new Category();
         category.setId(categoryId);
         category.setName(categoryName);
-        category.setUser(user);
 
         String newCategoryName = "newCategoryName";
         CategoryDto updatedCategoryDto = new CategoryDto(newCategoryName);
@@ -252,7 +242,6 @@ class CategoryServiceImplTest {
         Category savedCategory = new Category();
         savedCategory.setId(1L);
         savedCategory.setName(newCategoryName);
-        savedCategory.setUser(user);
 
         CategoryResponseDto expectedResponse = new CategoryResponseDto(1L, newCategoryName);
 
@@ -288,9 +277,6 @@ class CategoryServiceImplTest {
     @Test
     void updateCategory_shouldThrowDuplicateNameException_whenNameAlreadyExistsForUser() {
         //given
-        User user = new User();
-        user.setUsername(testUsername);
-
         setUpSecurityContext();
 
         Long categoryId = 1L;
@@ -298,7 +284,6 @@ class CategoryServiceImplTest {
         Category category = new Category();
         category.setId(categoryId);
         category.setName(categoryName);
-        category.setUser(user) ;
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         when(categoryRepository.existsByUser_UsernameAndName(testUsername, categoryName)).thenReturn(true);
@@ -314,9 +299,6 @@ class CategoryServiceImplTest {
     @Test
     void deleteCategoryById_shouldDeleteCategory() {
         //given
-        User user = new User();
-        user.setUsername(testUsername);
-
         setUpSecurityContext();
 
         Long categoryId = 1L;
@@ -324,7 +306,7 @@ class CategoryServiceImplTest {
         Category category = new Category();
         category.setId(categoryId);
         category.setName(categoryName);
-        category.setUser(user);
+
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         doNothing().when(taskService).checkIfCategoryHasAssociatedTasks(testUsername, categoryId);
@@ -342,6 +324,7 @@ class CategoryServiceImplTest {
     void deleteCategoryById_shouldThrowResourceNotFoundException_whenCategoryDoesNotExist() {
         //given
         Long categoryId = 1L;
+        when(categoryRepository.findById(categoryId)).thenReturn(Optional.empty());
 
         //when + then
         assertThrows(ResourceNotFoundException.class, () -> categoryService.deleteCategoryById(categoryId));
@@ -351,9 +334,6 @@ class CategoryServiceImplTest {
     @Test
     void deleteCategoryById_shouldThrowHasAssociatedTasksException_whenCategoryIsAssociatedToTask() {
         //given
-        User user = new User();
-        user.setUsername(testUsername);
-
         setUpSecurityContext();
 
         Long categoryId = 1L;
@@ -361,7 +341,6 @@ class CategoryServiceImplTest {
         Category category = new Category();
         category.setId(categoryId);
         category.setName(categoryName);
-        category.setUser(user);
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
         doThrow(new HasAssociatedTasksException(Category.class.getSimpleName(), categoryId))
