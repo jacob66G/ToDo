@@ -1,8 +1,22 @@
 <div id="main-div">
-    <app-navbar></app-navbar>
+    <app-navbar
+        (categoryClicked)="toggleCategory()"
+        (statusClicked)="toggleStatus()"
+        (taskClicked)="toggleTask()"
+    ></app-navbar>
+
     <div id="content">
-        <app-category-manage></app-category-manage>
-        <app-status-manage></app-status-manage>
-        <app-task-manage></app-task-manage>
+        @if(showCategory)
+        {
+            <app-category-manage></app-category-manage>
+        }
+        @if(showStatus)
+        {
+            <app-status-manage></app-status-manage>
+        }
+        @if(showTask)
+        {
+            <app-task-manage></app-task-manage>
+        }
     </div>
 </div>

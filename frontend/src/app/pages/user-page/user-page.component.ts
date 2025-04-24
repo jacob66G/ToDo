@@ -11,5 +11,19 @@ import { StatusManageComponent } from '../../components/status-manage/status-man
   styleUrl: './user-page.component.css'
 })
 export class UserPageComponent {
+  showCategory = false;
+  showStatus = false;
+  showTask = false;
 
+  toggleCategory(){
+    this.showCategory = !this.showCategory;
+  }
+
+  toggleStatus(){
+    this.showStatus = !this.showStatus;
+  }
+
+  toggleTask(){
+    this.showTask = !this.showTask;
+  }
 }
