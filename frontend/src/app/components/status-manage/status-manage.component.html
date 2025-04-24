@@ -1,0 +1,29 @@
+<div id="main-div" class="border border-2 border-dark bg-dark bg-gradient">
+    <p class="fw-normal fs-3 text-center text-light">Zarządzaj Statusami!</p>
+    <div class="d-flex justify-content-between d-grid gap-2 p-1">
+        <button class="btn btn-success" type="button">Dodaj</button>
+        <button class="btn btn-primary" type="button">Edytuj</button>
+        <button class="btn btn-danger" type="button">Usuń</button>
+    </div>
+
+    <div id="create-panel" class="border border-2 border-dark m-1">
+        <input type="text" class="form-control mb-2" placeholder="Nazwa statusu">
+
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+            <label class="form-check-label text-info" for="switchCheckDefault">Domyślny</label>
+        </div>
+
+        <button id="save-button" type="button" class="btn w-100 p-3 btn-warning d-flex justify-content-center align-items-center">Zapisz</button>
+    </div>
+
+    <div class="border border-2 border-dark m-1">
+        <p class="fw-normal fs-5 text-center text-warning">Dostępne Statusy</p>
+        <div id="category-group" class="list-group">
+            <button type="button" class="list-group-item list-group-item-action active" aria-current="true">Wybrany Status</button>
+            <button type="button" class="list-group-item list-group-item-action">Status 1</button>
+            <button type="button" class="list-group-item list-group-item-action">Status 2</button>
+            <button type="button" class="list-group-item list-group-item-action">Status 3</button>
+        </div>
+    </div>
+</div>
