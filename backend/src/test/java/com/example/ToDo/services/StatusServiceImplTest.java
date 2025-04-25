@@ -93,6 +93,7 @@ class StatusServiceImplTest {
     void getAllStatusDtoByUser_shouldReturnEmptyList_whenNoStatusesExistForUser() {
         //given
         setUpSecurityContext();
+        when(statusRepository.findAllByUser_Username(testUsername)).thenReturn(Collections.emptyList());
 
         //when
         List<StatusResponseDto> result = statusService.getAllStatusDtoByUser();

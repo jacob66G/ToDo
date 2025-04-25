@@ -72,7 +72,7 @@ public class TaskServiceImpl implements TaskService {
         task.setTitle(taskDto.title());
         task.setDescription(taskDto.description());
         task.setCategory(categoryService.getCategoryById(taskDto.categoryId()));
-        task.setStatus(statusService.getStatusByName(String.valueOf(DefaultStatus.NEW)));
+        task.setStatus(statusService.getStatusByName(DefaultStatus.NEW.name()));
 
         user.addTask(task);
 
