@@ -12,6 +12,7 @@ import com.example.ToDo.repositories.StatusRepository;
 import com.example.ToDo.services.StatusService;
 import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class StatusServiceImpl implements StatusService {
             StatusRepository statusRepository,
             StatusMapper statusMapper,
             UserService userService,
-            TaskService taskService
+            @Lazy TaskService taskService
     ) {
         this.statusRepository = statusRepository;
         this.statusMapper = statusMapper;

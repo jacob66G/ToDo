@@ -12,6 +12,7 @@ import com.example.ToDo.services.CategoryService;
 import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
 import jakarta.validation.Valid;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
             CategoryRepository categoryRepository,
             CategoryMapper categoryMapper,
             UserService userService,
-            TaskService taskService
+            @Lazy TaskService taskService
     ) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
