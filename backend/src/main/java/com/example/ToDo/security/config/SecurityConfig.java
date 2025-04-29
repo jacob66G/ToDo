@@ -1,6 +1,6 @@
-package com.example.ToDo.config;
+package com.example.ToDo.security.config;
 
-import com.example.ToDo.exceptions.CustomAuthenticationEntryPoint;
+import com.example.ToDo.security.exception.CustomAuthenticationEntryPoint;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

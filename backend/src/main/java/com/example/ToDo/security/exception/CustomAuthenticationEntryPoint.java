@@ -1,4 +1,4 @@
-package com.example.ToDo.exceptions;
+package com.example.ToDo.security.exception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.example.ToDo.services.impl;
+package com.example.ToDo.security.service;
 
 import com.example.ToDo.models.User;
 import com.example.ToDo.repositories.UserRepository;
