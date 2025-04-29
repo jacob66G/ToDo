@@ -1,5 +1,6 @@
 package com.example.ToDo.config;
 
+import com.example.ToDo.exceptions.CustomAuthenticationEntryPoint;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,7 @@ public class SecurityConfig {
                 )
                 // disabling X-Fram-Options to get access to h2-console
                 .headers( headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .exceptionHandling( ehc -> ehc.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
 
                 .formLogin(withDefaults())
                 .httpBasic(withDefaults());
