@@ -12,6 +12,7 @@ import com.example.ToDo.repositories.StatusRepository;
 import com.example.ToDo.services.StatusService;
 import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -65,6 +66,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
+    @Transactional
     public StatusResponseDto createStatus(StatusDto statusDto) {
         String username = getCurrentUserName();
         checkForDuplicateName(username, statusDto.name());
@@ -81,6 +83,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
+    @Transactional
     public StatusResponseDto updateStatus(Long id, StatusDto statusDto) {
         Status status = getStatusById(id);
         checkForDuplicateName(getCurrentUserName(), statusDto.name());
@@ -91,6 +94,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     @Override
+    @Transactional
     public void deleteStatusById(Long id) {
         Status status = getStatusById(id);
         taskService.checkIfStatusHasAssociatedTasks(getCurrentUserName(), status.getId());

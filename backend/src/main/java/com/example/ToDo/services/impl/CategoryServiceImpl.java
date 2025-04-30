@@ -11,6 +11,7 @@ import com.example.ToDo.repositories.CategoryRepository;
 import com.example.ToDo.services.CategoryService;
 import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
@@ -59,7 +60,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto createCategory(@Valid CategoryDto categoryDto) {
+    @Transactional
+    public CategoryResponseDto createCategory(CategoryDto categoryDto) {
         String username = getCurrentUserName();
         checkForDuplicateName(username, categoryDto.name());
 
@@ -74,7 +76,8 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto updateCategory(Long id, @Valid CategoryDto categoryDto) {
+    @Transactional
+    public CategoryResponseDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = getCategoryById(id);
         checkForDuplicateName(getCurrentUserName(), categoryDto.name());
 
@@ -84,6 +87,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategoryById(Long id) {
         Category category = getCategoryById(id);
         taskService.checkIfCategoryHasAssociatedTasks(getCurrentUserName(), category.getId());

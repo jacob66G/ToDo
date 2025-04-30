@@ -12,7 +12,7 @@ import com.example.ToDo.services.CategoryService;
 import com.example.ToDo.services.StatusService;
 import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -62,7 +62,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponseDto createTask(@Valid TaskDto taskDto) {
+    @Transactional
+    public TaskResponseDto createTask(TaskDto taskDto) {
         String username = getCurrentUserName();
         checkForDuplicateTitle(username, taskDto.title());
 
@@ -80,7 +81,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskResponseDto updateTask(Long id, @Valid TaskDto taskDto) {
+    @Transactional
+    public TaskResponseDto updateTask(Long id, TaskDto taskDto) {
         Task task = getTaskById(id);
         checkForDuplicateTitle(getCurrentUserName(), taskDto.title());
 
@@ -94,6 +96,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public TaskResponseDto updateStatus(Long taskId, Long statusId) {
         Task task = getTaskById(taskId);
         Status status = statusService.getStatusById(statusId);
@@ -104,6 +107,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public void deleteTaskById(Long id) {
         Task task = getTaskById(id);
         taskRepository.delete(task);
