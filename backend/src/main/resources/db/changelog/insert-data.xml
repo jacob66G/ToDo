@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="1746027841717-1" author="kubag (generated)">
+        <insert tableName="users">
+            <column name="id" valueNumeric="1"/>
+            <column name="username" value="bombardiroCrocodilo"/>
+            <column name="email" value="bombardiro.crocodilo@gmail.com"/>
+            <column name="password" value="bombardiroCrocodilo123"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="important"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="urgent"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="categories">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="non urgent"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="statuses">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="NEW"/>
+            <column name="is_default" valueBoolean="true"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="statuses">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="IN_PROGRESS"/>
+            <column name="is_default" valueBoolean="true"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="statuses">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="COMPLETED"/>
+            <column name="is_default" valueBoolean="true"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="statuses">
+            <column name="id" valueNumeric="4"/>
+            <column name="name" value="ABORTED"/>
+            <column name="is_default" valueBoolean="false"/>
+            <column name="user_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="1"/>
+            <column name="title" value="Complete project"/>
+            <column name="description" value="finish a project for college"/>
+            <column name="user_id" valueNumeric="1"/>
+            <column name="category_id" valueNumeric="1"/>
+            <column name="status_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="2"/>
+            <column name="title" value="Homework"/>
+            <column name="description" value="do math and physics homework"/>
+            <column name="user_id" valueNumeric="1"/>
+            <column name="category_id" valueNumeric="2"/>
+            <column name="status_id" valueNumeric="2"/>
+        </insert>
+
+        <insert tableName="tasks">
+            <column name="id" valueNumeric="3"/>
+            <column name="title" value="House cleaning"/>
+            <column name="description" value="Clean kitchen, vacuum living room"/>
+            <column name="user_id" valueNumeric="1"/>
+            <column name="category_id" valueNumeric="3"/>
+            <column name="status_id" valueNumeric="4"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

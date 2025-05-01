@@ -69,11 +69,12 @@ public class TaskServiceImpl implements TaskService {
 
         User user = userService.getUserByUsername(username);
 
-        Task task = new Task();
-        task.setTitle(taskDto.title());
-        task.setDescription(taskDto.description());
-        task.setCategory(categoryService.getCategoryById(taskDto.categoryId()));
-        task.setStatus(statusService.getStatusByName(DefaultStatus.NEW.name()));
+        Task task = Task.builder()
+                .title(taskDto.title())
+                .description(taskDto.description())
+                .category(categoryService.getCategoryById(taskDto.categoryId()))
+                .status(statusService.getStatusByName(DefaultStatus.NEW.name()))
+                .build();
 
         user.addTask(task);
 
