@@ -47,10 +47,4 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-
-    public void checkTokenExpiration(Date tokenExpiration) {
-        if(!tokenExpiration.before(new Date())) {
-            throw new JwtException("Token expired");
-        }
-    }
 }
