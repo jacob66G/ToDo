@@ -30,4 +30,8 @@ logging:
   pattern:
     console: ${CONSOLE_LOGGING_PATTERN:%green(%d{HH:mm:ss.SSS}) %blue(%-5level) %red([%thread]) %yellow(%logger{15}) - %msg%n}
 
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:aDJkOXNmdWUzN2NheG1mbDEyNGRmcHFvbWF4ODJhc2Qx}
+    expiration-time: ${JWT_EXPIRATION_TIME:3600000}
 
