@@ -1,6 +1,8 @@
 package com.example.ToDo.services.impl;
 
 import com.example.ToDo.constant.ApplicationConstants;
+import com.example.ToDo.dto.UserLoginDto;
+import com.example.ToDo.dto.UserLoginResponseDto;
 import com.example.ToDo.dto.UserRegistrationDto;
 import com.example.ToDo.dto.UserResponseDto;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
@@ -11,8 +13,14 @@ import com.example.ToDo.models.DefaultStatus;
 import com.example.ToDo.models.Status;
 import com.example.ToDo.models.User;
 import com.example.ToDo.repositories.UserRepository;
+import com.example.ToDo.security.service.JwtService;
 import com.example.ToDo.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +29,13 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     @Override
     public User getUserByUsername(String username) {
@@ -74,6 +85,27 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         return UserMapper.toDto(savedUser);
+    }
+
+    /**
+     * @return
+     */
+    @Override
+    public UserLoginResponseDto authenticateUser(UserLoginDto userLoginDto) {
+
+        UsernamePasswordAuthenticationToken authentication =
+                UsernamePasswordAuthenticationToken.unauthenticated(userLoginDto.getEmail(), userLoginDto.getPassword());
+
+        try {
+             authentication = (UsernamePasswordAuthenticationToken) this.authenticationManager.authenticate(authentication);
+        } catch (AuthenticationException ex) {
+            log.info("Bad credentials provided");
+            throw new BadCredentialsException("Bad Credentials");
+        }
+
+        String jwtToken = jwtService.generateToken(authentication);
+
+        return new UserLoginResponseDto(jwtToken);
     }
 
 

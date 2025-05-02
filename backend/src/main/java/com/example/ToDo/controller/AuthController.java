@@ -1,6 +1,8 @@
 package com.example.ToDo.controller;
 
 import com.example.ToDo.constant.ApplicationConstants;
+import com.example.ToDo.dto.UserLoginDto;
+import com.example.ToDo.dto.UserLoginResponseDto;
 import com.example.ToDo.dto.UserRegistrationDto;
 import com.example.ToDo.dto.UserResponseDto;
 import com.example.ToDo.services.UserService;
@@ -11,13 +13,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/api/users", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/api/auth", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
-public class UserController {
+public class AuthController {
 
     private final UserService userService;
 
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRegistrationDto userRegistrationDto) {
 
         UserResponseDto savedUserResponse = this.userService.registerUser(userRegistrationDto);
@@ -28,8 +30,10 @@ public class UserController {
                 .body(savedUserResponse);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<String> get() {
-        return ResponseEntity.ok("Hello");
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponseDto> authenticate(@RequestBody UserLoginDto userLoginDto) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(this.userService.authenticateUser(userLoginDto));
     }
 }
