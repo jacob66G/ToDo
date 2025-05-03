@@ -6,24 +6,20 @@
         <button class="btn btn-danger" type="button">Usuń</button>
     </div>
 
-    <div id="create-panel" class="border border-2 border-dark m-1">
-        <input type="text" class="form-control mb-2" placeholder="Nazwa statusu">
-
-        <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
-            <label class="form-check-label text-info" for="switchCheckDefault">Domyślny</label>
-        </div>
-
-        <button id="save-button" type="button" class="btn w-100 p-3 btn-warning d-flex justify-content-center align-items-center">Zapisz</button>
+    <div class="input-group mb-3 p-1">
+        <input type="text" class="form-control" placeholder="Podaj nazwę">
+        <button type="button" class="btn btn-warning">Zapisz</button>
     </div>
 
     <div class="border border-2 border-dark m-1">
-        <p class="fw-normal fs-5 text-center text-warning">Dostępne Statusy</p>
-        <div id="category-group" class="list-group">
-            <button type="button" class="list-group-item list-group-item-action active" aria-current="true">Wybrany Status</button>
-            <button type="button" class="list-group-item list-group-item-action">Status 1</button>
-            <button type="button" class="list-group-item list-group-item-action">Status 2</button>
-            <button type="button" class="list-group-item list-group-item-action">Status 3</button>
+        <p class="fw-normal fs-5 text-center text-warning">Stworzone Statusy</p>
+        <div class="list-group">
+            <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+              Wybrana Kategoria
+            </button>
+            <button type="button" class="list-group-item list-group-item-action">Kategoria 1</button>
+            <button type="button" class="list-group-item list-group-item-action">Kategoria 2</button>
+            <button type="button" class="list-group-item list-group-item-action">Kategoria 3</button>
         </div>
     </div>
 </div>

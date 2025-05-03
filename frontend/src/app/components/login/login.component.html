@@ -1,12 +1,18 @@
-<div id="login-div">
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <p class="fs-2 fw-bold text-center text-primary">Logowanie</p>
+  
     <div class="input-group mb-3">
-        <span class="input-group-text text-primary" id="basic-addon1">Login</span>
-        <input type="text" class="form-control">
+      <span class="input-group-text text-primary">E-mail</span>
+      <input type="text" class="form-control" id="email" formControlName="email">
     </div>
+  
     <div class="input-group mb-3">
-        <span class="input-group-text text-primary">Hasło</span>
-        <input type="password" class="form-control">
+      <span class="input-group-text text-primary">Hasło</span>
+      <input type="password" class="form-control" id="password" formControlName="password">
     </div>
-    <button type="button" class="btn btn-primary d-grid gap-2 col-6 mx-auto">Zaloguj</button>
-</div>
+  
+    <button type="submit" class="btn btn-primary d-grid gap-2 col-6 mx-auto">
+      Zaloguj
+    </button>
+  </form>
+  
