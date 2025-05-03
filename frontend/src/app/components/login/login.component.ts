@@ -21,11 +21,11 @@ export class LoginComponent {
   onSubmit(): void {
     const credentials = this.loginForm.value;
 
-    console.log(credentials);
+    //console.log(credentials);
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        console.log('Token JWT:', response.token);
+        //console.log('Token JWT:', response.token);
         this.authService.saveToken(response.token);
         this.router.navigate(['/user-page']);
       },
