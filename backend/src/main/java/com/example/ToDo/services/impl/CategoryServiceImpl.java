@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponseDto> getCategoriesDtoByUser() {
-        return categoryRepository.findAllByUser_UserEmail(getCurrentUserName()).stream()
+        return categoryRepository.findAllByUser(getCurrentUser()).stream()
                 .map(categoryMapper::toDto).collect(Collectors.toList());
     }
 
@@ -61,7 +61,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public CategoryResponseDto createCategory(CategoryDto categoryDto) {
-        String username = getCurrentUserName();
+        String username = getCurrentUser();
         checkForDuplicateName(username, categoryDto.name());
 
         User user = userService.getUserByEmail(username);
@@ -78,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public CategoryResponseDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = getCategoryById(id);
-        checkForDuplicateName(getCurrentUserName(), categoryDto.name());
+        checkForDuplicateName(getCurrentUser(), categoryDto.name());
 
         category.setName(categoryDto.name());
 
@@ -89,18 +89,18 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void deleteCategoryById(Long id) {
         Category category = getCategoryById(id);
-        taskService.checkIfCategoryHasAssociatedTasks(getCurrentUserName(), category.getId());
+        taskService.checkIfCategoryHasAssociatedTasks(getCurrentUser(), category.getId());
 
         categoryRepository.delete(category);
     }
 
-    private String getCurrentUserName() {
+    private String getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return auth.getName();
     }
 
     private void checkForDuplicateName(String username, String name) {
-        if (categoryRepository.existsByUser_UsernameAndName(username, name)) {
+        if (categoryRepository.existsByUserAndName(username, name)) {
             throw new DuplicateNameException(Category.class.getSimpleName(), name);
         }
     }

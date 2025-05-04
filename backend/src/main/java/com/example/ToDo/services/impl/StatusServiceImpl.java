@@ -43,8 +43,7 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public List<StatusResponseDto> getAllStatusDtoByUser() {
-        System.out.println("USER " + getCurrentUserName());
-        return statusRepository.findAllByUser_Username(getCurrentUserName()).stream()
+        return statusRepository.findAllByUser(getCurrentUserName()).stream()
                 .map(statusMapper::toDto).collect(Collectors.toList());
     }
 
@@ -109,7 +108,7 @@ public class StatusServiceImpl implements StatusService {
     }
 
     private void checkForDuplicateName(String username, String name) {
-        if (statusRepository.existsByUser_UsernameAndName(username, name)) {
+        if (statusRepository.existsByUserAndName(username, name)) {
             throw new DuplicateNameException(Category.class.getSimpleName(), name);
         }
     }

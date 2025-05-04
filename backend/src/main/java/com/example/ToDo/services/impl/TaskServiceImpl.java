@@ -45,7 +45,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskResponseDto> getTasksDtoByUser() {
-        return taskRepository.findAllByUser_Username(getCurrentUserName()).stream()
+        return taskRepository.findAllByUser(getCurrentUserName()).stream()
                 .map(taskMapper::toDto).collect(Collectors.toList());
     }
 
@@ -116,14 +116,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void checkIfCategoryHasAssociatedTasks(String username, Long categoryId) {
-        if (taskRepository.existsByUser_UsernameAndCategory_Id(username, categoryId)) {
+        if (taskRepository.existsByUserAndCategory_Id(username, categoryId)) {
             throw new HasAssociatedTasksException(Category.class.getSimpleName(), categoryId);
         }
     }
 
     @Override
     public void checkIfStatusHasAssociatedTasks(String username, Long statusId) {
-        if (taskRepository.existsByUser_UsernameAndStatus_Id(username, statusId)) {
+        if (taskRepository.existsByUserAndStatus_Id(username, statusId)) {
             throw new HasAssociatedTasksException(Status.class.getSimpleName(), statusId);
         }
     }
@@ -134,7 +134,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void checkForDuplicateTitle(String username, String title) {
-        if (taskRepository.existsByUser_UsernameAndTitle(username, title)) {
+        if (taskRepository.existsByUserAndTitle(username, title)) {
             throw new DuplicateNameException(Task.class.getSimpleName(), title);
         }
     }

@@ -10,15 +10,15 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
-    @Query("SELECT t FROM Task t WHERE t.user.email = :userName")
-    List<Task> findAllByUser_Username(String userName);
+    @Query("SELECT t FROM Task t WHERE t.user.email = :email")
+    List<Task> findAllByUser(@Param("email") String email);
 
-    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.username = :username AND LOWER(t.title) = LOWER(:title)")
-    boolean existsByUser_UsernameAndTitle(@Param("username") String username, @Param("title") String title);
+    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.email = :email AND LOWER(t.title) = LOWER(:title)")
+    boolean existsByUserAndTitle(@Param("email") String email, @Param("title") String title);
 
-    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.username = :username AND t.category.id = :categoryId")
-    boolean existsByUser_UsernameAndCategory_Id(@Param("username") String username, @Param("categoryId") Long categoryId);
+    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.email = :email AND t.category.id = :categoryId")
+    boolean existsByUserAndCategory_Id(@Param("email") String email, @Param("categoryId") Long categoryId);
 
-    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.username = :username AND t.status.id = :statusId")
-    boolean existsByUser_UsernameAndStatus_Id(@Param("username") String username, @Param("categoryId") Long statusId);
+    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.email = :email AND t.status.id = :statusId")
+    boolean existsByUserAndStatus_Id(@Param("email") String email, @Param("categoryId") Long statusId);
 }

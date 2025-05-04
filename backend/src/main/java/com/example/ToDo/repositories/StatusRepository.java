@@ -11,11 +11,11 @@ import java.util.Optional;
 
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Long> {
-    @Query("SELECT s FROM Status s WHERE s.user.email = :userName")
-    List<Status> findAllByUser_Username(@Param("userName") String userName);
+    @Query("SELECT s FROM Status s WHERE s.user.email = :email")
+    List<Status> findAllByUser(@Param("email") String email);
 
     Optional<Status> findByName(String name);
 
-    @Query("SELECT COUNT(*) > 0 FROM Status s WHERE s.user.username = :username AND LOWER(s.name) = LOWER(:name)")
-    boolean existsByUser_UsernameAndName(@Param("username") String username, @Param("name") String name);
+    @Query("SELECT COUNT(*) > 0 FROM Status s WHERE s.user.email = :email AND LOWER(s.name) = LOWER(:name)")
+    boolean existsByUserAndName(@Param("email") String email, @Param("name") String name);
 }
