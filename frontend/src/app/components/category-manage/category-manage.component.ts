@@ -31,38 +31,66 @@ export class CategoryManageComponent {
 
   selectCategory(category: Category) {
     this.selectedCategory = category;
-    this.categoryForm.patchValue({ name: category.name });
+  }
+
+  errorDisplay(err: any): void {
+    if (err instanceof HttpErrorResponse) {
+      const backendMsg = err.error?.message;
+      const userMsg = backendMsg || err.message || 'Nieznany błąd serwera';
+      alert(userMsg);
+    } else if (err instanceof Error) {
+      alert(err.message);
+    } else {
+      alert('Wystąpił nieoczekiwany błąd');
+    }
   }
 
   onCategoryAdd(): void {
     const category = this.categoryForm.value;
-    console.log(category);
+    //console.log(category);
     
     this.categoryService.createCategory(category).subscribe({
       next: (response) => {
-        console.log('Dodano kategorię:', response);
+        //console.log('Dodano kategorię:', response);
+        this.loadCategories();
       },
-      error: (err: any) => {
-        if (err instanceof HttpErrorResponse) {
-          const backendMsg = err.error?.message;
-          const userMsg = backendMsg || err.message || 'Nieznany błąd serwera';
-          alert(userMsg);
-        }
-        else if (err instanceof Error) {
-          alert(err.message);
-        }
-        else {
-          alert('Wystąpił nieoczekiwany błąd');
-        }
-      }
+      error: (err: any) => this.errorDisplay(err)
     });
   }
 
   onCategoryEdit(): void {
-
+    if(this.selectedCategory == null)
+    {
+      alert("Najpierw wybierz kategorię, którą chcesz edytować");
+    }
+    else
+    {
+      const category = this.categoryForm.value;
+      //console.log(category);
+      this.categoryService.updateCategory(this.selectedCategory.id, category).subscribe({
+        next: (response) => {
+          //console.log(response);
+          this.loadCategories();
+        },
+        error: (err: any) => this.errorDisplay(err)
+      })
+    }
   }
 
   onCategoryDelete(): void {
-    
+    if(this.selectedCategory == null)
+    {
+      alert("Najpierw wybierz kategorię, którą chcesz usunąć");
+    }
+    else
+    {
+      this.categoryService.deleteCategory(this.selectedCategory.id).subscribe({
+        next: () => {
+          //console.log('Kategoria usunięta:');
+          this.loadCategories();
+        },
+        error: (err: any) => this.errorDisplay(err)
+      });
+    }
   }
 }

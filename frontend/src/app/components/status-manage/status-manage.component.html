@@ -1,25 +1,29 @@
-<div id="main-div" class="border border-2 border-dark bg-dark bg-gradient">
-    <p class="fw-normal fs-3 text-center text-light">Zarządzaj Statusami!</p>
-    <div class="d-flex justify-content-between d-grid gap-2 p-1">
-        <button class="btn btn-success" type="button">Dodaj</button>
-        <button class="btn btn-primary" type="button">Edytuj</button>
-        <button class="btn btn-danger" type="button">Usuń</button>
-    </div>
-
-    <div class="input-group mb-3 p-1">
-        <input type="text" class="form-control" placeholder="Podaj nazwę">
-        <button type="button" class="btn btn-warning">Zapisz</button>
-    </div>
-
-    <div class="border border-2 border-dark m-1">
-        <p class="fw-normal fs-5 text-center text-warning">Stworzone Statusy</p>
-        <div class="list-group">
-            <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
-              Wybrana Kategoria
-            </button>
-            <button type="button" class="list-group-item list-group-item-action">Kategoria 1</button>
-            <button type="button" class="list-group-item list-group-item-action">Kategoria 2</button>
-            <button type="button" class="list-group-item list-group-item-action">Kategoria 3</button>
+<form [formGroup]="statusForm">
+    <div id="main-div" class="border border-2 border-dark bg-dark bg-gradient">
+        <p class="fw-normal fs-3 text-center text-light">Zarządzaj Statusami!</p>
+        <div class="d-flex justify-content-between d-grid gap-2 p-1">
+            <button class="btn btn-success" type="button" (click)="onStatusAdd()">Dodaj</button>
+            <button class="btn btn-primary" type="button" (click)="onStatusEdit()">Edytuj</button>
+            <button class="btn btn-danger" type="button" (click)="onStatusDelete()">Usuń</button>
+        </div>
+    
+        <div class="input-group mb-3 p-1">
+            <input type="text" class="form-control" placeholder="Podaj nazwę" formControlName="name">
+        </div>
+    
+        <div class="border border-2 border-dark m-1">
+            <p class="fw-normal fs-5 text-center text-warning">Stworzone Statusy</p>
+            <div class="list-group">
+                <button
+                    *ngFor="let status of statuses"
+                    type="button"
+                    class="list-group-item list-group-item-action"
+                    [class.active]="status === selectedStatus"
+                    (click)="selectStatus(status)"
+                    >
+                    {{ status.name }}
+                </button>
+            </div>
         </div>
     </div>
-</div>
+</form>
