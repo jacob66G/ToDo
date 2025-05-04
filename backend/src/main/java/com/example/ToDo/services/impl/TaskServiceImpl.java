@@ -67,7 +67,7 @@ public class TaskServiceImpl implements TaskService {
         String username = getCurrentUserName();
         checkForDuplicateTitle(username, taskDto.title());
 
-        User user = userService.getUserByUsername(username);
+        User user = userService.getUserByEmail(username);
 
         Task task = Task.builder()
                 .title(taskDto.title())

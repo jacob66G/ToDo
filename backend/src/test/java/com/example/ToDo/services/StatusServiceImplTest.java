@@ -193,7 +193,7 @@ class StatusServiceImplTest {
         StatusResponseDto expectedResponse = new StatusResponseDto(1L, "Test", false);
 
         when(statusRepository.existsByUser_UsernameAndName(testUsername, statusName)).thenReturn(false);
-        when(userService.getUserByUsername(testUsername)).thenReturn(user);
+        when(userService.getUserByEmail(testUsername)).thenReturn(user);
         when(statusRepository.save(any(Status.class))).thenReturn(savedStatus);
         when(statusMapper.toDto(savedStatus)).thenReturn(expectedResponse);
 
@@ -203,7 +203,7 @@ class StatusServiceImplTest {
         //then
         assertEquals(expectedResponse, result);
         verify(statusRepository, times(1)).existsByUser_UsernameAndName(testUsername, statusName);
-        verify(userService, times(1)).getUserByUsername(testUsername);
+        verify(userService, times(1)).getUserByEmail(testUsername);
         verify(statusRepository, times(1)).save(any(Status.class));
         verify(statusMapper, times(1)).toDto(savedStatus);
     }

@@ -192,7 +192,7 @@ class CategoryServiceImplTest {
         CategoryResponseDto expectedResponse = new CategoryResponseDto(1L, categoryName);
 
         when(categoryRepository.existsByUser_UsernameAndName(testUsername, categoryName)).thenReturn(false);
-        when(userService.getUserByUsername(testUsername)).thenReturn(user);
+        when(userService.getUserByEmail(testUsername)).thenReturn(user);
         when(categoryRepository.save(any(Category.class))).thenReturn(savedCategory);
         when(categoryMapper.toDto(savedCategory)).thenReturn(expectedResponse);
 
@@ -204,7 +204,7 @@ class CategoryServiceImplTest {
         assertEquals(expectedResponse, result);
 
         verify(categoryRepository, times(1)).existsByUser_UsernameAndName(testUsername, categoryName);
-        verify(userService, times(1)).getUserByUsername(testUsername);
+        verify(userService, times(1)).getUserByEmail(testUsername);
         verify(categoryRepository, times(1)).save(any(Category.class));
         verify(categoryMapper, times(1)).toDto(savedCategory);
     }
@@ -219,7 +219,7 @@ class CategoryServiceImplTest {
         assertThrows(DuplicateNameException.class, () -> categoryService.createCategory(new CategoryDto(categoryName)));
 
         verify(categoryRepository, times(1)).existsByUser_UsernameAndName(testUsername, categoryName);
-        verify(userService, never()).getUserByUsername(testUsername);
+        verify(userService, never()).getUserByEmail(testUsername);
         verify(categoryRepository, never()).save(any(Category.class));
         verify(categoryMapper, never()).toDto(any(Category.class));
     }

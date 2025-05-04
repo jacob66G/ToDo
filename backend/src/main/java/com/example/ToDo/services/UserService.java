@@ -7,7 +7,7 @@ import com.example.ToDo.dto.UserResponseDto;
 import com.example.ToDo.models.User;
 
 public interface UserService {
-    User getUserByUsername(String username);
+    User getUserByEmail(String username);
 
     UserResponseDto registerUser(UserRegistrationDto userRegistrationDto);
 

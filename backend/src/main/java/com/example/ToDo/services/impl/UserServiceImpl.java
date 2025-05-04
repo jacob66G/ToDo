@@ -38,9 +38,9 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
 
     @Override
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(), username));
+    public User getUserByEmail(String email) {
+        return userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException(User.class.getSimpleName(), email));
     }
 
     @Override
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
         // throwing exception if user with given username and email already exists
         String username = userRegistrationDto.getUsername();
-        Optional<User> optionalUserByUsername = userRepository.findByUsername(username);
+        Optional<User> optionalUserByUsername = userRepository.findByUserEmail(username);
         if(optionalUserByUsername.isPresent()) {
             throw new UserAlreadyExistsException(
                     "User with username: " + username + " already exists"

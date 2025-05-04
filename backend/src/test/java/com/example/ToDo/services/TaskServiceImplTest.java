@@ -227,7 +227,7 @@ class TaskServiceImplTest {
         TaskResponseDto expectedResponse = new TaskResponseDto(id, title, description, categoryName, statusName);
 
         when(taskRepository.existsByUser_UsernameAndTitle(testUsername, title)).thenReturn(false);
-        when(userService.getUserByUsername(testUsername)).thenReturn(user);
+        when(userService.getUserByEmail(testUsername)).thenReturn(user);
         when(categoryService.getCategoryById(categoryId)).thenReturn(category);
         when(statusService.getStatusByName(statusName)).thenReturn(status);
         when(taskRepository.save(any(Task.class))).thenReturn(newTask);
@@ -240,7 +240,7 @@ class TaskServiceImplTest {
         assertEquals(expectedResponse, result);
 
         verify(taskRepository, times(1)).existsByUser_UsernameAndTitle(testUsername, title);
-        verify(userService, times(1)).getUserByUsername(testUsername);
+        verify(userService, times(1)).getUserByEmail(testUsername);
         verify(categoryService, times(1)).getCategoryById(categoryId);
         verify(statusService, times(1)).getStatusByName(statusName);
         verify(taskMapper, times(1)).toDto(newTask);

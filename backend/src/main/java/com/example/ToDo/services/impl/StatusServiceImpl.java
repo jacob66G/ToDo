@@ -72,7 +72,7 @@ public class StatusServiceImpl implements StatusService {
         String username = getCurrentUserName();
         checkForDuplicateName(username, statusDto.name());
 
-        User user = userService.getUserByUsername(username);
+        User user = userService.getUserByEmail(username);
 
         Status status = new Status();
         status.setName(statusDto.name());

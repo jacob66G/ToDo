@@ -64,7 +64,7 @@ public class CategoryServiceImpl implements CategoryService {
         String username = getCurrentUserName();
         checkForDuplicateName(username, categoryDto.name());
 
-        User user = userService.getUserByUsername(username);
+        User user = userService.getUserByEmail(username);
 
         Category category = new Category();
         category.setName(categoryDto.name());
