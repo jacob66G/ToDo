@@ -22,8 +22,8 @@ export class CategoryService {
   }
 
   validateCategory(category: Category): Observable<never> | null {
-    if (!category.name || category.name.length < 5) {
-      return throwError(() => new Error('Nazwa nie może mieć mniej niż 5 znaków'));
+    if (!category.name || category.name.length < 5 || category.name.length > 20) {
+      return throwError(() => new Error('Nazwa nie może mieć mniej niż 5 znaków i więcej niż 20 znaków'));
     } else if (!this.regex.test(category.name)) {
       return throwError(() => new Error('Nazwa posiada niedozwolone znaki'));
     }
