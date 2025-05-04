@@ -11,7 +11,8 @@ import java.util.Optional;
 
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Long> {
-    List<Status> findAllByUser_Username(String username);
+    @Query("SELECT s FROM Status s WHERE s.user.email = :userName")
+    List<Status> findAllByUser_Username(@Param("userName") String userName);
 
     Optional<Status> findByName(String name);
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+    @Query("SELECT t FROM Task t WHERE t.user.email = :userName")
     List<Task> findAllByUser_Username(String userName);
 
     @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.username = :username AND LOWER(t.title) = LOWER(:title)")

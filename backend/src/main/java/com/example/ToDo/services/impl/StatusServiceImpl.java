@@ -43,6 +43,7 @@ public class StatusServiceImpl implements StatusService {
 
     @Override
     public List<StatusResponseDto> getAllStatusDtoByUser() {
+        System.out.println("USER " + getCurrentUserName());
         return statusRepository.findAllByUser_Username(getCurrentUserName()).stream()
                 .map(statusMapper::toDto).collect(Collectors.toList());
     }

@@ -75,7 +75,7 @@ class CategoryServiceImplTest {
         CategoryResponseDto responseDto2 = new CategoryResponseDto(2L, "Category 2");
         List<CategoryResponseDto> expectedResponse = List.of(responseDto1, responseDto2);
 
-        when(categoryRepository.findAllByUser_Username(testUsername)).thenReturn(categories);
+        when(categoryRepository.findAllByUser_UserEmail(testUsername)).thenReturn(categories);
         when(categoryMapper.toDto(category1)).thenReturn(responseDto1);
         when(categoryMapper.toDto(category2)).thenReturn(responseDto2);
 
@@ -85,7 +85,7 @@ class CategoryServiceImplTest {
         //then
         assertEquals(expectedResponse, result);
 
-        verify(categoryRepository, times(1)).findAllByUser_Username(testUsername);
+        verify(categoryRepository, times(1)).findAllByUser_UserEmail(testUsername);
         verify(categoryMapper, times(1)).toDto(category1);
         verify(categoryMapper, times(1)).toDto(category2);
     }
@@ -101,7 +101,7 @@ class CategoryServiceImplTest {
         //then
         assertEquals(Collections.emptyList(), result);
 
-        verify(categoryRepository, times(1)).findAllByUser_Username(testUsername);
+        verify(categoryRepository, times(1)).findAllByUser_UserEmail(testUsername);
     }
 
     @Test

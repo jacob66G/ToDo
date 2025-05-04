@@ -42,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponseDto> getCategoriesDtoByUser() {
-        return categoryRepository.findAllByUser_Username(getCurrentUserName()).stream()
+        return categoryRepository.findAllByUser_UserEmail(getCurrentUserName()).stream()
                 .map(categoryMapper::toDto).collect(Collectors.toList());
     }
 
