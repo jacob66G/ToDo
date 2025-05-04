@@ -7,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrl: './category-manage.component.css'
 })
 export class CategoryManageComponent {
-  inputVisible: boolean = true;
+  
 }

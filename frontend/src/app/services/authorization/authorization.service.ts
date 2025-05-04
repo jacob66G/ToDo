@@ -28,9 +28,9 @@ interface RegisterResponse {
   providedIn: 'root'
 })
 export class AuthorizationService {
-  private baseURL = 'http://localhost:8080'
-  private loginUrl = `${this.baseURL}/api/auth/login`;
-  private registerUrl = `${this.baseURL}/api/auth/register`;
+  private baseURL = 'http://localhost:8080/api/auth'
+  private loginUrl = `${this.baseURL}/login`;
+  private registerUrl = `${this.baseURL}/register`;
 
   constructor(private http: HttpClient) { }
 
