@@ -6,5 +6,4 @@
 
     <include file="db/changelog/create-tables.xml"/>
     <include file="db/changelog/insert-data.xml"/>
-
 </databaseChangeLog>

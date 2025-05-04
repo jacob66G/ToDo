@@ -7,9 +7,9 @@
     <changeSet id="1746027841717-1" author="kubag (generated)">
         <insert tableName="users">
             <column name="id" valueNumeric="1"/>
-            <column name="username" value="bombardiroCrocodilo"/>
-            <column name="email" value="bombardiro.crocodilo@gmail.com"/>
-            <column name="password" value="bombardiroCrocodilo123"/>
+            <column name="username" value="admin"/>
+            <column name="email" value="admin@gmail.com"/>
+            <column name="password" value="{bcrypt}$2a$10$bRNHirG7lenpp8dyqFG5du5utPqh4wtF1.LckBC.DsMNUO4KJTKF2"/> <!--value: password-->
         </insert>
 
         <insert tableName="categories">
@@ -85,4 +85,20 @@
             <column name="status_id" valueNumeric="4"/>
         </insert>
     </changeSet>
+
+    <changeSet id="reset-id-sequence" author="kubag">
+        <sql>ALTER TABLE users
+            ALTER COLUMN id RESTART WITH 2;</sql>
+        <sql>
+            ALTER TABLE categories ALTER COLUMN id RESTART WITH 4;
+        </sql>
+        <sql>
+            ALTER TABLE statuses ALTER COLUMN id RESTART WITH 5;
+        </sql>
+        <sql>
+            ALTER TABLE tasks ALTER COLUMN id RESTART WITH 4;
+        </sql>
+    </changeSet>
+
+
 </databaseChangeLog>

@@ -12,7 +12,6 @@ import com.example.ToDo.services.CategoryService;
 import com.example.ToDo.services.TaskService;
 import com.example.ToDo.services.UserService;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
