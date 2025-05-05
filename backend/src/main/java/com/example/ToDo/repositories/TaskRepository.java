@@ -20,5 +20,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     boolean existsByUserAndCategory_Id(@Param("email") String email, @Param("categoryId") Long categoryId);
 
     @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.email = :email AND t.status.id = :statusId")
-    boolean existsByUserAndStatus_Id(@Param("email") String email, @Param("categoryId") Long statusId);
+    boolean existsByUserAndStatus_Id(@Param("email") String email, @Param("statusId") Long statusId);
 }
