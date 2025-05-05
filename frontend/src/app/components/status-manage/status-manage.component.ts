@@ -2,32 +2,27 @@ import { Component } from '@angular/core';
 import { StatusService } from '../../services/status/status.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { NgFor, AsyncPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Status } from '../../models/status';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-status-manage',
-  imports: [ReactiveFormsModule, NgFor],
+  imports: [ReactiveFormsModule, NgFor, AsyncPipe],
   standalone: true,
   templateUrl: './status-manage.component.html',
   styleUrl: './status-manage.component.css'
 })
 export class StatusManageComponent {
   statusForm: FormGroup;
-  statuses: Status[] = [];
   selectedStatus: Status | null = null;
+  statuses: Observable<Status[]>;
 
   constructor(private statusService: StatusService, private formBuilder: FormBuilder)
   {
     this.statusForm = this.formBuilder.group({name: ['']});
-    this.loadCategories();
-  }
-
-  loadCategories() {
-    this.statusService.getStatuses().subscribe((data) => {
-      this.statuses = data;
-    });
+    this.statuses = this.statusService.statuses;
   }
 
   selectStatus(status: Status) {
@@ -53,7 +48,6 @@ export class StatusManageComponent {
     this.statusService.createStatus(category).subscribe({
       next: (response) => {
         //console.log('Dodano kategorię:', response);
-        this.loadCategories();
       },
       error: (err: any) => this.errorDisplay(err)
     });
@@ -71,7 +65,6 @@ export class StatusManageComponent {
       this.statusService.updateStatus(this.selectedStatus.id, status).subscribe({
         next: (response) => {
           //console.log(response);
-          this.loadCategories();
         },
         error: (err: any) => this.errorDisplay(err)
       })
@@ -88,7 +81,6 @@ export class StatusManageComponent {
       this.statusService.deleteStatus(this.selectedStatus.id).subscribe({
         next: () => {
           //console.log('Kategoria usunięta:');
-          this.loadCategories();
         },
         error: (err: any) => this.errorDisplay(err)
       });

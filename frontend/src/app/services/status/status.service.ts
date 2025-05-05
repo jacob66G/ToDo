@@ -1,18 +1,28 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { Status } from '../../models/status';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatusService {
-  private baseURL = 'http://localhost:8080/api/statuses'
-  private headers = this.createHeader();
+    private statusesSubject = new BehaviorSubject<Status[]>([]);
+    statuses = this.statusesSubject.asObservable();
+
+    private baseURL = 'http://localhost:8080/api/statuses'
+    private headers = this.createHeader();
   
     private regex = /^[a-zA-Z0-9 ,.:;!?()\-\+*/&^%$#@]*$/;
   
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) { this.fetchStatuses(); }
+    
+    fetchStatuses() {
+      this.http.get<Status[]>(this.baseURL, { headers: this.headers }).subscribe((data) => {
+        this.statusesSubject.next(data);
+      });
+    }
   
     createHeader(){
       const token = localStorage.getItem('token');
@@ -30,7 +40,7 @@ export class StatusService {
     }
   
     getStatuses(): Observable<Status[]> {
-      return this.http.get<Status[]>(this.baseURL, { headers: this.headers });
+      return this.statuses;
     }
   
     getStatusById(id: number): Observable<Status> {
@@ -41,17 +51,17 @@ export class StatusService {
       const validationError = this.validateStatus(category);
       if (validationError) return validationError;
     
-      return this.http.post<Status>(this.baseURL, category, { headers: this.headers });
+      return this.http.post<Status>(this.baseURL, category, { headers: this.headers }).pipe(tap(() => this.fetchStatuses()));
     }
     
     updateStatus(id: number, category: Status): Observable<Status> {
       const validationError = this.validateStatus(category);
       if (validationError) return validationError;
     
-      return this.http.put<Status>(`${this.baseURL}/${id}`, category, { headers: this.headers });
+      return this.http.put<Status>(`${this.baseURL}/${id}`, category, { headers: this.headers }).pipe(tap(() => this.fetchStatuses()));
     }
   
     deleteStatus(id: number): Observable<void> {
-      return this.http.delete<void>(`${this.baseURL}/${id}`, { headers: this.headers });
+      return this.http.delete<void>(`${this.baseURL}/${id}`, { headers: this.headers }).pipe(tap(() => this.fetchStatuses()));
     }
 }
