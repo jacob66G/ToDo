@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { Task } from '../../models/task';
+import { Task, BodyTaskAdd, BodyTaskEdit } from '../../models/task';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,17 @@ export class TaskService {
 
     getTasks(): Observable<Task[]> {
       return this.tasks;
+    }
+
+    createTask(bodyTask: BodyTaskAdd): Observable<Task>{
+      return this.http.post<Task>(this.baseURL, bodyTask, { headers: this.headers }).pipe(tap(() => this.fetchTasks()));
+    }
+
+    updateTask(id: number, task: BodyTaskEdit): Observable<Task>{
+      return this.http.put<Task>(`${this.baseURL}/${id}`, task, { headers: this.headers }).pipe(tap(() => this.fetchTasks()));
+    }
+
+    deleteTask(id: number): Observable<void>{
+      return this.http.delete<void>(`${this.baseURL}/${id}`, { headers: this.headers }).pipe(tap(() => this.fetchTasks()));
     }
 }

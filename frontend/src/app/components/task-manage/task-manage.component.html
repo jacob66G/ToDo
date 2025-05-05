@@ -2,9 +2,9 @@
     <div id="main-div" class="border border-2 border-dark bg-dark bg-gradient">
         <p class="fw-normal fs-3 text-center text-light">Zarządzaj Zadaniami!</p>
         <div class="d-flex justify-content-between d-grid gap-2 p-1">
-            <button class="btn btn-success" type="button">Dodaj</button>
-            <button class="btn btn-primary" type="button">Edytuj</button>
-            <button class="btn btn-danger" type="button">Usuń</button>
+            <button class="btn btn-success" type="button" (click)="onTaskCreate()">Dodaj</button>
+            <button class="btn btn-primary" type="button" (click)="onTaskEdit()">Edytuj</button>
+            <button class="btn btn-danger" type="button" (click)="onTaskDelete()">Usuń</button>
         </div>
     
         <div id="create-panel" class="border border-2 border-dark m-1">
@@ -12,22 +12,21 @@
     
             <textarea class="form-control mb-2" placeholder="Opis" id="floatingTextarea2" style="height: 100px" formControlName="description"></textarea>
     
-            <select class="form-select mb-2" aria-label="Default select example" formControlName="category">
-                <option *ngFor="let status of statuses | async" [value]="status.id">
-                    {{ status.name }}
+            <select formControlName="category" class="form-select mb-2">
+                <option *ngFor="let category of categories | async" [ngValue]="category">
+                  {{ category.name }}
                 </option>
             </select>
             
-            <select class="form-select mb-2" aria-label="Default select example" formControlName="category">
-                <option *ngFor="let category of categories | async" [value]="category.id">
-                    {{ category.name }}
+            <select formControlName="status" class="form-select">
+                <option *ngFor="let status of statuses | async" [ngValue]="status">
+                    {{ status.name }}
                 </option>
             </select>
         </div>
     
         <div class="border border-2 border-dark m-1">
             <p class="fw-normal fs-5 text-center text-warning">Stworzone Zadania</p>
-            <button class="btn btn-warning w-100" type="button" (click)="displayTask()">Wyświetl</button>
             <div class="list-group">
                 <button
                     *ngFor="let task of tasks | async"

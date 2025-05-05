@@ -42,10 +42,10 @@ export class StatusManageComponent {
   }
 
   onStatusAdd(): void {
-    const category = this.statusForm.value;
+    const status = this.statusForm.value;
     //console.log(category);
     
-    this.statusService.createStatus(category).subscribe({
+    this.statusService.createStatus(status).subscribe({
       next: (response) => {
         //console.log('Dodano kategorię:', response);
       },

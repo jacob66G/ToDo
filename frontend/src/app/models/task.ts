@@ -1,10 +1,20 @@
-import { Category } from "./category";
-import { Status } from "./status";
-
 export interface Task {
     id: number;
     title: string;
     description: string;
-    category: Category;
-    status: Status;
+    categoryName: string;
+    statusName: string;
+}
+
+export interface BodyTaskAdd {
+    title: string;
+    description: string;
+    categoryId: number;
+}
+
+export interface BodyTaskEdit {
+    title: string;
+    description: string;
+    categoryId: number;
+    statusId: number;
 }
