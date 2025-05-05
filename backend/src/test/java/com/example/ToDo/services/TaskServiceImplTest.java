@@ -1,7 +1,8 @@
 package com.example.ToDo.services;
 
-import com.example.ToDo.dto.TaskDto;
+import com.example.ToDo.dto.TaskCreateDto;
 import com.example.ToDo.dto.TaskResponseDto;
+import com.example.ToDo.dto.TaskUpdateDto;
 import com.example.ToDo.exceptions.DuplicateNameException;
 import com.example.ToDo.exceptions.HasAssociatedTasksException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
@@ -216,7 +217,7 @@ class TaskServiceImplTest {
         Status status = new Status();
         status.setName(statusName);
 
-        TaskDto newTaskDto = new TaskDto(title, description, categoryId);
+        TaskCreateDto newTaskCreateDto = new TaskCreateDto(title, description, categoryId);
         Task newTask = new Task();
         newTask.setId(id);
         newTask.setTitle(title);
@@ -234,7 +235,7 @@ class TaskServiceImplTest {
         when(taskMapper.toDto(newTask)).thenReturn(expectedResponse);
 
         //when
-        TaskResponseDto result = taskService.createTask(newTaskDto);
+        TaskResponseDto result = taskService.createTask(newTaskCreateDto);
 
         //then
         assertEquals(expectedResponse, result);
@@ -256,7 +257,7 @@ class TaskServiceImplTest {
         when(taskRepository.findByUserAndTitle(testUsername, title, null)).thenReturn(List.of(new Task()));
 
         //when + then
-        assertThrows(DuplicateNameException.class, ()-> taskService.createTask(new TaskDto(title, "test", 1L)));
+        assertThrows(DuplicateNameException.class, ()-> taskService.createTask(new TaskCreateDto(title, "test", 1L)));
 
         verify(taskRepository, times(1)).findByUserAndTitle(testUsername, title, null);
         verify(taskRepository, never()).save(any(Task.class));
@@ -280,7 +281,7 @@ class TaskServiceImplTest {
         String newTitle = "new title";
         String newDescription = "new description";
 
-        TaskDto newTaskDto = new TaskDto(newTitle, newDescription, 1L);
+        TaskUpdateDto newTaskDto = new TaskUpdateDto(newTitle, newDescription, 1L, 1L);
 
         Task newTask = new Task();
         newTask.setId(id);
@@ -324,7 +325,7 @@ class TaskServiceImplTest {
         when(taskRepository.findByUserAndTitle(testUsername, newTitle, id)).thenReturn(List.of(new Task()));
 
         //when + then
-        assertThrows(DuplicateNameException.class, () -> taskService.updateTask(id, new TaskDto(newTitle, "test", 1L)));
+        assertThrows(DuplicateNameException.class, () -> taskService.updateTask(id, new TaskUpdateDto(newTitle, "test", 1L, 1L)));
 
         verify(taskRepository, times(1)).findById(id);
         verify(taskRepository, times(1)).findByUserAndTitle(testUsername, newTitle, id);
@@ -339,85 +340,13 @@ class TaskServiceImplTest {
         when(taskRepository.findById(id)).thenReturn(Optional.empty());
 
         //when + then
-        assertThrows(ResourceNotFoundException.class, () -> taskService.updateTask(id, new TaskDto("test", "test", 1L)));
+        assertThrows(ResourceNotFoundException.class, () -> taskService.updateTask(id, new TaskUpdateDto("test", "test", 1L, 1L)));
 
         verify(taskRepository, times(1)).findById(id);
         verify(taskRepository, never()).findByUserAndTitle(testUsername, "test", id);
         verify(taskRepository, never()).save(any(Task.class));
     }
 
-    @Test
-    void updateStatus_shouldUpdateTaskStatusAndReturnTaskResponseDto() {
-        //given
-        Long taskId = 1L;
-        Task existingTask = new Task();
-        existingTask.setId(taskId);
-        existingTask.setTitle("Task 1");
-
-        Long statusId = 1L;
-        String statusName = DefaultStatus.IN_PROGRESS.name();
-        Status status = new Status();
-        status.setId(statusId);
-        status.setName(statusName);
-
-        Task updatedTask = new Task();
-        updatedTask.setId(taskId);
-        updatedTask.setTitle("Task 1");
-        updatedTask.setStatus(status);
-
-        TaskResponseDto expectedResponse = new TaskResponseDto(taskId, "Task 1", "Task1", "categoryName", statusName);
-
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
-        when(statusService.getStatusById(statusId)).thenReturn(status);
-        when(taskRepository.save(existingTask)).thenReturn(updatedTask);
-        when(taskMapper.toDto(updatedTask)).thenReturn(expectedResponse);
-
-        //when
-        TaskResponseDto result = taskService.updateStatus(taskId, statusId);
-
-        //then
-        assertEquals(expectedResponse, result);
-
-        verify(taskRepository, times(1)).findById(taskId);
-        verify(statusService, times(1)).getStatusById(statusId);
-        verify(taskRepository, times(1)).save(existingTask);
-        verify(taskMapper, times(1)).toDto(updatedTask);
-
-    }
-
-    @Test
-    void updateStatus_shouldThrownResourceNotFoundException_whenTaskDoesNotExists() {
-        //given
-        Long taskId = 1L;
-        when(taskRepository.findById(taskId)).thenReturn(Optional.empty());
-
-        //when + then
-        assertThrows(ResourceNotFoundException.class, () -> taskService.updateStatus(taskId, 1L));
-
-        verify(taskRepository, times(1)).findById(taskId);
-        verify(statusService, never()).getStatusById(1L);
-        verify(taskRepository, never()).save(any(Task.class));
-    }
-
-    @Test
-    void updateStatus_shouldThrownResourceNotFoundException_whenStatusDoesNotExists() {
-        //given
-        Long taskId = 1L;
-        Task existingTask = new Task();
-        existingTask.setId(taskId);
-
-        Long statusId = 1L;
-
-        when(taskRepository.findById(taskId)).thenReturn(Optional.of(existingTask));
-        when(statusService.getStatusById(statusId)).thenThrow(new ResourceNotFoundException(Status.class.getSimpleName(), statusId));
-
-        //when + then
-        assertThrows(ResourceNotFoundException.class, () -> taskService.updateStatus(taskId, 1L));
-
-        verify(taskRepository).findById(taskId);
-        verify(statusService).getStatusById(statusId);
-        verify(taskRepository, never()).save(any());
-    }
 
     @Test
     void deleteTaskById_shouldDeleteTask() {

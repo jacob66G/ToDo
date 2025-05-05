@@ -1,12 +1,13 @@
 package com.example.ToDo.services.impl;
 
+import com.example.ToDo.dto.TaskUpdateDto;
 import com.example.ToDo.exceptions.DuplicateNameException;
 import com.example.ToDo.exceptions.HasAssociatedTasksException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
 import com.example.ToDo.mapper.TaskMapper;
 import com.example.ToDo.models.*;
 import com.example.ToDo.dto.TaskResponseDto;
-import com.example.ToDo.dto.TaskDto;
+import com.example.ToDo.dto.TaskCreateDto;
 import com.example.ToDo.repositories.TaskRepository;
 import com.example.ToDo.services.CategoryService;
 import com.example.ToDo.services.StatusService;
@@ -63,16 +64,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public TaskResponseDto createTask(TaskDto taskDto) {
+    public TaskResponseDto createTask(TaskCreateDto taskCreateDto) {
         String username = getCurrentUserName();
-        checkForDuplicateTitle(username, taskDto.title(), null);
+        checkForDuplicateTitle(username, taskCreateDto.title(), null);
 
         User user = userService.getUserByEmail(username);
 
         Task task = Task.builder()
-                .title(taskDto.title())
-                .description(taskDto.description())
-                .category(categoryService.getCategoryById(taskDto.categoryId()))
+                .title(taskCreateDto.title())
+                .description(taskCreateDto.description())
+                .category(categoryService.getCategoryById(taskCreateDto.categoryId()))
                 .status(statusService.getStatusByName(DefaultStatus.NEW.name()))
                 .build();
 
@@ -83,7 +84,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public TaskResponseDto updateTask(Long id, TaskDto taskDto) {
+    public TaskResponseDto updateTask(Long id, TaskUpdateDto taskDto) {
         Task task = getTaskById(id);
         checkForDuplicateTitle(getCurrentUserName(), taskDto.title(), id);
 
@@ -93,15 +94,7 @@ public class TaskServiceImpl implements TaskService {
         Category category = categoryService.getCategoryById(taskDto.categoryId());
         task.setCategory(category);
 
-        return taskMapper.toDto(taskRepository.save(task));
-    }
-
-    @Override
-    @Transactional
-    public TaskResponseDto updateStatus(Long taskId, Long statusId) {
-        Task task = getTaskById(taskId);
-        Status status = statusService.getStatusById(statusId);
-
+        Status status = statusService.getStatusById(taskDto.statusId());
         task.setStatus(status);
 
         return taskMapper.toDto(taskRepository.save(task));
