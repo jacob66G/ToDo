@@ -60,4 +60,15 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler(DefaultDataDeletionException.class)
+    public ResponseEntity<ErrorResponse> handleDefaultDataDeletionException(DefaultDataDeletionException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                409,
+                e.getMessage(),
+                "Delete resource failed.",
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }

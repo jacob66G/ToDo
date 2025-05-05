@@ -1,5 +1,6 @@
 package com.example.ToDo.services.impl;
 
+import com.example.ToDo.exceptions.DefaultDataDeletionException;
 import com.example.ToDo.exceptions.DuplicateNameException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
 import com.example.ToDo.mapper.StatusMapper;
@@ -97,6 +98,11 @@ public class StatusServiceImpl implements StatusService {
     @Transactional
     public void deleteStatusById(Long id) {
         Status status = getStatusById(id);
+
+        if(status.isDefault()) {
+            throw new DefaultDataDeletionException(Status.class.getSimpleName(), status.getName());
+        }
+
         taskService.checkIfStatusHasAssociatedTasks(getCurrentUserName(), status.getId());
 
         statusRepository.delete(status);
