@@ -1,4 +1,4 @@
-<form [formGroup]="categoryForm" (ngSubmit)="onCategoryAdd()">
+<form [formGroup]="categoryForm">
     <div id="main-div" class="border border-2 border-dark bg-dark bg-gradient">
         <p class="fw-normal fs-3 text-center text-light">Zarządzaj Kategoriami!</p>
         <div class="d-flex justify-content-between d-grid gap-2 p-1">
@@ -15,15 +15,14 @@
             <p class="fw-normal fs-5 text-center text-warning">Stworzone Kategorie</p>
             <div class="list-group">
                 <button
-                    *ngFor="let category of categories"
-                    type="button"
-                    class="list-group-item list-group-item-action"
-                    [class.active]="category === selectedCategory"
-                    (click)="selectCategory(category)"
-                    >
-                    {{ category.name }}
+                  *ngFor="let category of categories | async"
+                  type="button"
+                  class="list-group-item list-group-item-action"
+                  [class.active]="category === selectedCategory"
+                  (click)="selectCategory(category)">
+                  {{ category.name }}
                 </button>
-            </div>
+              </div>
         </div>
     </div>
 </form>

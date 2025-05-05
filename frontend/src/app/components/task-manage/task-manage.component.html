@@ -1,40 +1,43 @@
-<div id="main-div" class="border border-2 border-dark bg-dark bg-gradient">
-    <p class="fw-normal fs-3 text-center text-light">Zarządzaj Zadaniami!</p>
-    <div class="d-flex justify-content-between d-grid gap-2 p-1">
-        <button class="btn btn-success" type="button">Dodaj</button>
-        <button class="btn btn-primary" type="button">Edytuj</button>
-        <button class="btn btn-danger" type="button">Usuń</button>
-    </div>
-
-    <div id="create-panel" class="border border-2 border-dark m-1">
-        <input type="text" class="form-control mb-2" placeholder="Tytuł">
-
-        <textarea class="form-control mb-2" placeholder="Opis" id="floatingTextarea2" style="height: 100px"></textarea>
-
-        <select class="form-select mb-2" aria-label="Default select example">
-            <option selected>Wybierz status</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select>
-
-        <select class="form-select mb-2" aria-label="Default select example">
-            <option selected>Wybierz kategorię</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
-        </select>
-
-        <button id="save-button" type="button" class="btn w-100 p-3 btn-warning d-flex justify-content-center align-items-center">Zapisz</button>
-    </div>
-
-    <div class="border border-2 border-dark m-1">
-        <p class="fw-normal fs-5 text-center text-warning">Dostępne Zadania</p>
-        <div id="category-group" class="list-group">
-            <button type="button" class="list-group-item list-group-item-action active" aria-current="true">Wybrane Zadanie</button>
-            <button type="button" class="list-group-item list-group-item-action">Zadanie 1</button>
-            <button type="button" class="list-group-item list-group-item-action">Zadanie 2</button>
-            <button type="button" class="list-group-item list-group-item-action">Zadanie 3</button>
+<form [formGroup]="taskForm">
+    <div id="main-div" class="border border-2 border-dark bg-dark bg-gradient">
+        <p class="fw-normal fs-3 text-center text-light">Zarządzaj Zadaniami!</p>
+        <div class="d-flex justify-content-between d-grid gap-2 p-1">
+            <button class="btn btn-success" type="button" (click)="onTaskCreate()">Dodaj</button>
+            <button class="btn btn-primary" type="button" (click)="onTaskEdit()">Edytuj</button>
+            <button class="btn btn-danger" type="button" (click)="onTaskDelete()">Usuń</button>
+        </div>
+    
+        <div id="create-panel" class="border border-2 border-dark m-1">
+            <input type="text" class="form-control mb-2" placeholder="Tytuł" formControlName="title">
+    
+            <textarea class="form-control mb-2" placeholder="Opis" id="floatingTextarea2" style="height: 100px" formControlName="description"></textarea>
+    
+            <select formControlName="category" class="form-select mb-2">
+                <option *ngFor="let category of categories | async" [ngValue]="category">
+                  {{ category.name }}
+                </option>
+            </select>
+            
+            <select formControlName="status" class="form-select">
+                <option *ngFor="let status of statuses | async" [ngValue]="status">
+                    {{ status.name }}
+                </option>
+            </select>
+        </div>
+    
+        <div class="border border-2 border-dark m-1">
+            <p class="fw-normal fs-5 text-center text-warning">Stworzone Zadania</p>
+            <div class="list-group">
+                <button
+                    *ngFor="let task of tasks | async"
+                    type="button"
+                    class="list-group-item list-group-item-action"
+                    [class.active]="task === selectedTask"
+                    (click)="selectTask(task)"
+                    >
+                    {{ task.title }}
+                </button>
+            </div>
         </div>
     </div>
-</div>
+</form>

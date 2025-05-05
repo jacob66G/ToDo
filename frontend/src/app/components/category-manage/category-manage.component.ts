@@ -2,31 +2,26 @@ import { Component } from '@angular/core';
 import { CategoryService } from '../../services/category/category.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NgFor } from '@angular/common';
+import { NgFor, AsyncPipe  } from '@angular/common';
 import { Category } from '../../models/category';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-category-manage',
-  imports: [ReactiveFormsModule, NgFor],
+  imports: [ReactiveFormsModule, NgFor, AsyncPipe],
   templateUrl: './category-manage.component.html',
   styleUrl: './category-manage.component.css'
 })
 export class CategoryManageComponent {
   categoryForm: FormGroup;
-  categories: Category[] = [];
   selectedCategory: Category | null = null;
+  categories: Observable<Category[]>;
 
   constructor(private categoryService: CategoryService, private formBuilder: FormBuilder)
   {
     this.categoryForm = this.formBuilder.group({name: ['']});
-    this.loadCategories();
-  }
-
-  loadCategories() {
-    this.categoryService.getCategories().subscribe((data) => {
-      this.categories = data;
-    });
+    this.categories = this.categoryService.categories;
   }
 
   selectCategory(category: Category) {
@@ -52,7 +47,6 @@ export class CategoryManageComponent {
     this.categoryService.createCategory(category).subscribe({
       next: (response) => {
         //console.log('Dodano kategorię:', response);
-        this.loadCategories();
       },
       error: (err: any) => this.errorDisplay(err)
     });
@@ -70,7 +64,6 @@ export class CategoryManageComponent {
       this.categoryService.updateCategory(this.selectedCategory.id, category).subscribe({
         next: (response) => {
           //console.log(response);
-          this.loadCategories();
         },
         error: (err: any) => this.errorDisplay(err)
       })
@@ -87,7 +80,6 @@ export class CategoryManageComponent {
       this.categoryService.deleteCategory(this.selectedCategory.id).subscribe({
         next: () => {
           //console.log('Kategoria usunięta:');
-          this.loadCategories();
         },
         error: (err: any) => this.errorDisplay(err)
       });

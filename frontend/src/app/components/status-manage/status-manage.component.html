@@ -15,7 +15,7 @@
             <p class="fw-normal fs-5 text-center text-warning">Stworzone Statusy</p>
             <div class="list-group">
                 <button
-                    *ngFor="let status of statuses"
+                    *ngFor="let status of statuses | async"
                     type="button"
                     class="list-group-item list-group-item-action"
                     [class.active]="status === selectedStatus"
