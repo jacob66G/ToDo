@@ -113,7 +113,7 @@ export class TaskManageComponent {
   onTaskEdit(){
     if(this.selectedTask == null)
       {
-        alert("Najpierw wybierz status, który chcesz edytować");
+        alert("Najpierw wybierz zadanie, które chcesz edytować");
       }
       else
       {
@@ -139,7 +139,7 @@ export class TaskManageComponent {
   onTaskDelete(): void{
     if(this.selectedTask == null)
     {
-      alert("Najpierw wybierz status, który chcesz usunąć");
+      alert("Najpierw wybierz zadanie, które chcesz usunąć");
     }
     else
     {
