@@ -226,7 +226,7 @@ class TaskServiceImplTest {
 
         TaskResponseDto expectedResponse = new TaskResponseDto(id, title, description, categoryName, statusName);
 
-        when(taskRepository.existsByUserAndTitle(testUsername, title)).thenReturn(false);
+        when(taskRepository.findByUserAndTitle(testUsername, title, null)).thenReturn(Collections.emptyList());
         when(userService.getUserByEmail(testUsername)).thenReturn(user);
         when(categoryService.getCategoryById(categoryId)).thenReturn(category);
         when(statusService.getStatusByName(statusName)).thenReturn(status);
@@ -239,7 +239,7 @@ class TaskServiceImplTest {
         //then
         assertEquals(expectedResponse, result);
 
-        verify(taskRepository, times(1)).existsByUserAndTitle(testUsername, title);
+        verify(taskRepository, times(1)).findByUserAndTitle(testUsername, title, null);
         verify(userService, times(1)).getUserByEmail(testUsername);
         verify(categoryService, times(1)).getCategoryById(categoryId);
         verify(statusService, times(1)).getStatusByName(statusName);
@@ -253,12 +253,12 @@ class TaskServiceImplTest {
         setUpSecurityContext();
 
         String title = "Task1";
-        when(taskRepository.existsByUserAndTitle(testUsername, title)).thenReturn(true);
+        when(taskRepository.findByUserAndTitle(testUsername, title, null)).thenReturn(List.of(new Task()));
 
         //when + then
         assertThrows(DuplicateNameException.class, ()-> taskService.createTask(new TaskDto(title, "test", 1L)));
 
-        verify(taskRepository, times(1)).existsByUserAndTitle(testUsername, title);
+        verify(taskRepository, times(1)).findByUserAndTitle(testUsername, title, null);
         verify(taskRepository, never()).save(any(Task.class));
     }
 
@@ -290,7 +290,7 @@ class TaskServiceImplTest {
         TaskResponseDto expectedResponse = new TaskResponseDto(id, newTitle, newDescription, "categoryName", "statusName" );
 
         when(taskRepository.findById(id)).thenReturn(Optional.of(task));
-        when(taskRepository.existsByUserAndTitle(testUsername, newTitle)).thenReturn(false);
+        when(taskRepository.findByUserAndTitle(testUsername, newTitle, id)).thenReturn(Collections.emptyList());
         when(categoryService.getCategoryById(categoryId)).thenReturn(category);
         when(taskRepository.save(any(Task.class))).thenReturn(newTask);
         when(taskMapper.toDto(newTask)).thenReturn(expectedResponse);
@@ -302,7 +302,7 @@ class TaskServiceImplTest {
         assertEquals(expectedResponse, result);
 
         verify(taskRepository, times(1)).findById(id);
-        verify(taskRepository, times(1)).existsByUserAndTitle(testUsername, task.getTitle());
+        verify(taskRepository, times(1)).findByUserAndTitle(testUsername, task.getTitle(), id);
         verify(categoryService, times(1)).getCategoryById(categoryId);
         verify(taskRepository, times(1)).save(any(Task.class));
         verify(taskMapper, times(1)).toDto(newTask);
@@ -321,13 +321,13 @@ class TaskServiceImplTest {
         task.setTitle("Task1");
 
         when(taskRepository.findById(id)).thenReturn(Optional.of(task));
-        when(taskRepository.existsByUserAndTitle(testUsername, newTitle)).thenReturn(true);
+        when(taskRepository.findByUserAndTitle(testUsername, newTitle, id)).thenReturn(List.of(new Task()));
 
         //when + then
         assertThrows(DuplicateNameException.class, () -> taskService.updateTask(id, new TaskDto(newTitle, "test", 1L)));
 
         verify(taskRepository, times(1)).findById(id);
-        verify(taskRepository, times(1)).existsByUserAndTitle(testUsername, newTitle);
+        verify(taskRepository, times(1)).findByUserAndTitle(testUsername, newTitle, id);
         verify(taskRepository, never()).save(any(Task.class));
     }
 
@@ -342,7 +342,7 @@ class TaskServiceImplTest {
         assertThrows(ResourceNotFoundException.class, () -> taskService.updateTask(id, new TaskDto("test", "test", 1L)));
 
         verify(taskRepository, times(1)).findById(id);
-        verify(taskRepository, never()).existsByUserAndTitle(testUsername, "test");
+        verify(taskRepository, never()).findByUserAndTitle(testUsername, "test", id);
         verify(taskRepository, never()).save(any(Task.class));
     }
 
@@ -456,12 +456,12 @@ class TaskServiceImplTest {
         //given
         Long categoryId = 1L;
 
-        when(taskRepository.existsByUserAndCategory_Id(testUsername, categoryId)).thenReturn(false);
+        when(taskRepository.findByUserAndCategory_Id(testUsername, categoryId)).thenReturn(Collections.emptyList());
 
         // when + then
         assertDoesNotThrow(() -> taskService.checkIfCategoryHasAssociatedTasks(testUsername, categoryId));
 
-        verify(taskRepository).existsByUserAndCategory_Id(testUsername, categoryId);
+        verify(taskRepository).findByUserAndCategory_Id(testUsername, categoryId);
     }
 
     @Test
@@ -469,12 +469,12 @@ class TaskServiceImplTest {
         //given
         Long categoryId = 1L;
 
-        when(taskRepository.existsByUserAndCategory_Id(testUsername, categoryId)).thenReturn(true);
+        when(taskRepository.findByUserAndCategory_Id(testUsername, categoryId)).thenReturn(List.of(new Task()));
 
         //when + then
         assertThrows(HasAssociatedTasksException.class, () -> taskService.checkIfCategoryHasAssociatedTasks(testUsername, categoryId));
 
-        verify(taskRepository).existsByUserAndCategory_Id(testUsername, categoryId);
+        verify(taskRepository).findByUserAndCategory_Id(testUsername, categoryId);
     }
 
     @Test
@@ -482,12 +482,12 @@ class TaskServiceImplTest {
         //given
         Long statusId = 1L;
 
-        when(taskRepository.existsByUserAndStatus_Id(testUsername, statusId)).thenReturn(false);
+        when(taskRepository.findByUserAndStatus_Id(testUsername, statusId)).thenReturn(Collections.emptyList());
 
         // when + then
         assertDoesNotThrow(() -> taskService.checkIfStatusHasAssociatedTasks(testUsername, statusId));
 
-        verify(taskRepository).existsByUserAndStatus_Id(testUsername, statusId);
+        verify(taskRepository).findByUserAndStatus_Id(testUsername, statusId);
     }
 
     @Test
@@ -495,11 +495,11 @@ class TaskServiceImplTest {
         //given
         Long statusId = 1L;
 
-        when(taskRepository.existsByUserAndStatus_Id(testUsername, statusId)).thenReturn(true);
+        when(taskRepository.findByUserAndStatus_Id(testUsername, statusId)).thenReturn(List.of(new Task()));
 
         //when + then
         assertThrows(HasAssociatedTasksException.class, () -> taskService.checkIfStatusHasAssociatedTasks(testUsername, statusId));
 
-        verify(taskRepository).existsByUserAndStatus_Id(testUsername, statusId);
+        verify(taskRepository).findByUserAndStatus_Id(testUsername, statusId);
     }
 }

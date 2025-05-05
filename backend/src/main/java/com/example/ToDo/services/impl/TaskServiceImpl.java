@@ -65,7 +65,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskResponseDto createTask(TaskDto taskDto) {
         String username = getCurrentUserName();
-        checkForDuplicateTitle(username, taskDto.title());
+        checkForDuplicateTitle(username, taskDto.title(), null);
 
         User user = userService.getUserByEmail(username);
 
@@ -85,7 +85,7 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public TaskResponseDto updateTask(Long id, TaskDto taskDto) {
         Task task = getTaskById(id);
-        checkForDuplicateTitle(getCurrentUserName(), taskDto.title());
+        checkForDuplicateTitle(getCurrentUserName(), taskDto.title(), id);
 
         task.setTitle(taskDto.title());
         task.setDescription(taskDto.description());
@@ -116,14 +116,14 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void checkIfCategoryHasAssociatedTasks(String username, Long categoryId) {
-        if (taskRepository.existsByUserAndCategory_Id(username, categoryId)) {
+        if (!taskRepository.findByUserAndCategory_Id(username, categoryId).isEmpty()) {
             throw new HasAssociatedTasksException(Category.class.getSimpleName(), categoryId);
         }
     }
 
     @Override
     public void checkIfStatusHasAssociatedTasks(String username, Long statusId) {
-        if (taskRepository.existsByUserAndStatus_Id(username, statusId)) {
+        if (!taskRepository.findByUserAndStatus_Id(username, statusId).isEmpty()) {
             throw new HasAssociatedTasksException(Status.class.getSimpleName(), statusId);
         }
     }
@@ -133,8 +133,8 @@ public class TaskServiceImpl implements TaskService {
         return auth.getName();
     }
 
-    private void checkForDuplicateTitle(String username, String title) {
-        if (taskRepository.existsByUserAndTitle(username, title)) {
+    private void checkForDuplicateTitle(String username, String title, Long taskId) {
+        if (!taskRepository.findByUserAndTitle(username, title, taskId).isEmpty()) {
             throw new DuplicateNameException(Task.class.getSimpleName(), title);
         }
     }

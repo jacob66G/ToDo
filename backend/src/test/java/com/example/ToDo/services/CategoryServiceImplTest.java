@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -191,7 +192,7 @@ class CategoryServiceImplTest {
         savedCategory.setUser(user);
         CategoryResponseDto expectedResponse = new CategoryResponseDto(1L, categoryName);
 
-        when(categoryRepository.existsByUserAndName(testUsername, categoryName)).thenReturn(false);
+        when(categoryRepository.findByUserAndName(testUsername, categoryName, null)).thenReturn(Collections.emptyList());
         when(userService.getUserByEmail(testUsername)).thenReturn(user);
         when(categoryRepository.save(any(Category.class))).thenReturn(savedCategory);
         when(categoryMapper.toDto(savedCategory)).thenReturn(expectedResponse);
@@ -203,7 +204,7 @@ class CategoryServiceImplTest {
         assertNotNull(result);
         assertEquals(expectedResponse, result);
 
-        verify(categoryRepository, times(1)).existsByUserAndName(testUsername, categoryName);
+        verify(categoryRepository, times(1)).findByUserAndName(testUsername, categoryName, null);
         verify(userService, times(1)).getUserByEmail(testUsername);
         verify(categoryRepository, times(1)).save(any(Category.class));
         verify(categoryMapper, times(1)).toDto(savedCategory);
@@ -213,12 +214,13 @@ class CategoryServiceImplTest {
     void createCategory_shouldThrowDuplicateNameException_whenNameAlreadyExistsForUser() {
         //given
         String categoryName = "category1";
-        when(categoryRepository.existsByUserAndName(testUsername, categoryName)).thenReturn(true);
+
+        when(categoryRepository.findByUserAndName(testUsername, categoryName, null)).thenReturn(List.of(new Category()));
 
         //when + then
         assertThrows(DuplicateNameException.class, () -> categoryService.createCategory(new CategoryDto(categoryName)));
 
-        verify(categoryRepository, times(1)).existsByUserAndName(testUsername, categoryName);
+        verify(categoryRepository, times(1)).findByUserAndName(testUsername, categoryName, null);
         verify(userService, never()).getUserByEmail(testUsername);
         verify(categoryRepository, never()).save(any(Category.class));
         verify(categoryMapper, never()).toDto(any(Category.class));
@@ -246,7 +248,7 @@ class CategoryServiceImplTest {
         CategoryResponseDto expectedResponse = new CategoryResponseDto(1L, newCategoryName);
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
-        when(categoryRepository.existsByUserAndName(testUsername, newCategoryName)).thenReturn(false);
+        when(categoryRepository.findByUserAndName(testUsername, newCategoryName, categoryId)).thenReturn(Collections.emptyList());
         when(categoryRepository.save(any(Category.class))).thenReturn(savedCategory);
         when(categoryMapper.toDto(savedCategory)).thenReturn(expectedResponse);
 
@@ -258,7 +260,7 @@ class CategoryServiceImplTest {
         assertEquals(expectedResponse, result);
 
         verify(categoryRepository, times(1)).findById(categoryId);
-        verify(categoryRepository, times(1)).existsByUserAndName(testUsername, newCategoryName);
+        verify(categoryRepository, times(1)).findByUserAndName(testUsername, newCategoryName, categoryId);
         verify(categoryRepository, times(1)).save(any(Category.class));
         verify(categoryMapper, times(1)).toDto(any(Category.class));
     }
@@ -286,13 +288,13 @@ class CategoryServiceImplTest {
         category.setName(categoryName);
 
         when(categoryRepository.findById(categoryId)).thenReturn(Optional.of(category));
-        when(categoryRepository.existsByUserAndName(testUsername, categoryName)).thenReturn(true);
+        when(categoryRepository.findByUserAndName(testUsername, categoryName, categoryId)).thenReturn(List.of(new Category()));
 
         //when + then
         assertThrows(DuplicateNameException.class, () -> categoryService.updateCategory(categoryId, new CategoryDto(categoryName)));
 
         verify(categoryRepository, times(1)).findById(categoryId);
-        verify(categoryRepository, times(1)).existsByUserAndName(testUsername, categoryName);
+        verify(categoryRepository, times(1)).findByUserAndName(testUsername, categoryName, categoryId);
     }
 
 

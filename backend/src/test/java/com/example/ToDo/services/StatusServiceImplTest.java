@@ -192,7 +192,7 @@ class StatusServiceImplTest {
 
         StatusResponseDto expectedResponse = new StatusResponseDto(1L, "Test", false);
 
-        when(statusRepository.existsByUserAndName(testUsername, statusName)).thenReturn(false);
+        when(statusRepository.findByUserAndName(testUsername, statusName, null)).thenReturn(Collections.emptyList());
         when(userService.getUserByEmail(testUsername)).thenReturn(user);
         when(statusRepository.save(any(Status.class))).thenReturn(savedStatus);
         when(statusMapper.toDto(savedStatus)).thenReturn(expectedResponse);
@@ -202,7 +202,7 @@ class StatusServiceImplTest {
 
         //then
         assertEquals(expectedResponse, result);
-        verify(statusRepository, times(1)).existsByUserAndName(testUsername, statusName);
+        verify(statusRepository, times(1)).findByUserAndName(testUsername, statusName, null);
         verify(userService, times(1)).getUserByEmail(testUsername);
         verify(statusRepository, times(1)).save(any(Status.class));
         verify(statusMapper, times(1)).toDto(savedStatus);
@@ -214,12 +214,12 @@ class StatusServiceImplTest {
         setUpSecurityContext();
 
         String statusName = "test";
-        when(statusRepository.existsByUserAndName(testUsername, statusName)).thenReturn(true);
+        when(statusRepository.findByUserAndName(testUsername, statusName, null)).thenReturn(List.of(new Status()));
 
         //when + then
         assertThrows(DuplicateNameException.class, () -> statusService.createStatus(new StatusDto(statusName)));
 
-        verify(statusRepository, times(1)).existsByUserAndName(testUsername, statusName);
+        verify(statusRepository, times(1)).findByUserAndName(testUsername, statusName, null);
     }
 
     @Test
@@ -244,7 +244,7 @@ class StatusServiceImplTest {
         StatusResponseDto expectedResponse = new StatusResponseDto(statusId, newStatusName, false);
 
         when(statusRepository.findById(statusId)).thenReturn(Optional.of(status));
-        when(statusRepository.existsByUserAndName(testUsername, newStatusName)).thenReturn(false);
+        when(statusRepository.findByUserAndName(testUsername, newStatusName, statusId)).thenReturn(Collections.emptyList());
         when(statusRepository.save(any(Status.class))).thenReturn(savedStatus);
         when(statusMapper.toDto(savedStatus)).thenReturn(expectedResponse);
 
@@ -255,7 +255,7 @@ class StatusServiceImplTest {
         assertEquals(expectedResponse, result);
 
         verify(statusRepository, times(1)).findById(statusId);
-        verify(statusRepository, times(1)).existsByUserAndName(testUsername, newStatusName);
+        verify(statusRepository, times(1)).findByUserAndName(testUsername, newStatusName, statusId);
         verify(statusRepository, times(1)).save(any(Status.class));
         verify(statusMapper, times(1)).toDto(savedStatus);
     }
@@ -287,12 +287,12 @@ class StatusServiceImplTest {
         savedStatus.setName(statusName);
 
         when(statusRepository.findById(statusId)).thenReturn(Optional.of(savedStatus));
-        when(statusRepository.existsByUserAndName(testUsername, statusName)).thenReturn(true);
+        when(statusRepository.findByUserAndName(testUsername, statusName, statusId)).thenReturn(List.of(new Status()));
 
         //when + then
         assertThrows(DuplicateNameException.class, () -> statusService.updateStatus(statusId, statusDto));
 
-        verify(statusRepository, times(1)).existsByUserAndName(testUsername, statusName);
+        verify(statusRepository, times(1)).findByUserAndName(testUsername, statusName, statusId);
         verify(statusRepository, never()).save(any(Status.class));
     }
 

@@ -61,8 +61,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(DefaultDataDeletionException.class)
-    public ResponseEntity<ErrorResponse> handleDefaultDataDeletionException(DefaultDataDeletionException e) {
+    @ExceptionHandler(DefaultDataUpdateException.class)
+    public ResponseEntity<ErrorResponse> handleDefaultDataDeletionException(DefaultDataUpdateException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 409,
                 e.getMessage(),

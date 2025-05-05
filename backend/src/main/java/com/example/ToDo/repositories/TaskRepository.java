@@ -13,12 +13,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t WHERE t.user.email = :email")
     List<Task> findAllByUser(@Param("email") String email);
 
-    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.email = :email AND LOWER(t.title) = LOWER(:title)")
-    boolean existsByUserAndTitle(@Param("email") String email, @Param("title") String title);
+    @Query("SELECT t FROM Task t WHERE t.user.email = :email AND LOWER(t.title) = LOWER(:title) AND (:taskId IS NULL OR t.id != :taskId)")
+    List<Task> findByUserAndTitle(@Param("email") String email, @Param("title") String title, @Param("taskId") Long taskId);
 
-    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.email = :email AND t.category.id = :categoryId")
-    boolean existsByUserAndCategory_Id(@Param("email") String email, @Param("categoryId") Long categoryId);
+    @Query("SELECT t FROM Task t WHERE t.user.email = :email AND t.category.id = :categoryId")
+    List<Task> findByUserAndCategory_Id(@Param("email") String email, @Param("categoryId") Long categoryId);
 
-    @Query("SELECT COUNT(*) > 0 FROM Task t WHERE t.user.email = :email AND t.status.id = :statusId")
-    boolean existsByUserAndStatus_Id(@Param("email") String email, @Param("statusId") Long statusId);
+    @Query("SELECT t FROM Task t WHERE t.user.email = :email AND t.status.id = :statusId")
+    List<Task> findByUserAndStatus_Id(@Param("email") String email, @Param("statusId") Long statusId);
 }

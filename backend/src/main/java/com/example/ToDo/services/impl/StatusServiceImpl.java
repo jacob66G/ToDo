@@ -1,10 +1,9 @@
 package com.example.ToDo.services.impl;
 
-import com.example.ToDo.exceptions.DefaultDataDeletionException;
+import com.example.ToDo.exceptions.DefaultDataUpdateException;
 import com.example.ToDo.exceptions.DuplicateNameException;
 import com.example.ToDo.exceptions.ResourceNotFoundException;
 import com.example.ToDo.mapper.StatusMapper;
-import com.example.ToDo.models.Category;
 import com.example.ToDo.models.Status;
 import com.example.ToDo.models.User;
 import com.example.ToDo.dto.StatusDto;
@@ -70,7 +69,7 @@ public class StatusServiceImpl implements StatusService {
     @Transactional
     public StatusResponseDto createStatus(StatusDto statusDto) {
         String username = getCurrentUserName();
-        checkForDuplicateName(username, statusDto.name());
+        checkForDuplicateName(username, statusDto.name(), null);
 
         User user = userService.getUserByEmail(username);
 
@@ -87,7 +86,12 @@ public class StatusServiceImpl implements StatusService {
     @Transactional
     public StatusResponseDto updateStatus(Long id, StatusDto statusDto) {
         Status status = getStatusById(id);
-        checkForDuplicateName(getCurrentUserName(), statusDto.name());
+
+        if(status.isDefault()) {
+            throw new DefaultDataUpdateException(Status.class.getSimpleName(), status.getName());
+        }
+
+        checkForDuplicateName(getCurrentUserName(), statusDto.name(), id);
 
         status.setName(statusDto.name());
 
@@ -100,7 +104,7 @@ public class StatusServiceImpl implements StatusService {
         Status status = getStatusById(id);
 
         if(status.isDefault()) {
-            throw new DefaultDataDeletionException(Status.class.getSimpleName(), status.getName());
+            throw new DefaultDataUpdateException(Status.class.getSimpleName(), status.getName());
         }
 
         taskService.checkIfStatusHasAssociatedTasks(getCurrentUserName(), status.getId());
@@ -113,9 +117,9 @@ public class StatusServiceImpl implements StatusService {
         return auth.getName();
     }
 
-    private void checkForDuplicateName(String username, String name) {
-        if (statusRepository.existsByUserAndName(username, name)) {
-            throw new DuplicateNameException(Category.class.getSimpleName(), name);
+    private void checkForDuplicateName(String username, String name, Long statusId) {
+        if (!statusRepository.findByUserAndName(username, name, statusId).isEmpty()) {
+            throw new DuplicateNameException(Status.class.getSimpleName(), name);
         }
     }
 }

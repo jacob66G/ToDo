@@ -62,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public CategoryResponseDto createCategory(CategoryDto categoryDto) {
         String username = getCurrentUser();
-        checkForDuplicateName(username, categoryDto.name());
+        checkForDuplicateName(username, categoryDto.name(), null);
 
         User user = userService.getUserByEmail(username);
 
@@ -78,7 +78,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public CategoryResponseDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = getCategoryById(id);
-        checkForDuplicateName(getCurrentUser(), categoryDto.name());
+        checkForDuplicateName(getCurrentUser(), categoryDto.name(), id);
 
         category.setName(categoryDto.name());
 
@@ -99,8 +99,8 @@ public class CategoryServiceImpl implements CategoryService {
         return auth.getName();
     }
 
-    private void checkForDuplicateName(String username, String name) {
-        if (categoryRepository.existsByUserAndName(username, name)) {
+    private void checkForDuplicateName(String username, String name, Long categoryId) {
+        if (!categoryRepository.findByUserAndName(username, name, categoryId).isEmpty()) {
             throw new DuplicateNameException(Category.class.getSimpleName(), name);
         }
     }
